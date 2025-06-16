@@ -10,6 +10,8 @@ import { API } from "./Host";
 import Policy from "./pages/policy/Policy";
 import FAQ from "./pages/faq/FAQ";
 import Referral from "./pages/referral/Referral";
+import CategoryManagement from "./pages/Pre-generated courses/CategoryManagement";
+import CourseManagement from "./pages/Pre-generated courses/courses management/CourseManagement";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -170,6 +172,8 @@ const App = () => {
                   <Route path="/edituser" element={<EditUser />} />
                 </>
               )}
+              <Route path="/categorymanagement" element={<CategoryManagement/>}/>
+              <Route path="/coursemanagement" element={<CourseManagement/>}/>
               {memoizedFeatures["team"] && (
                 <>
                   <Route

@@ -59,12 +59,12 @@ const Layout = ({ permissions }) => {
         {
           title: "Category Management",
           icon: <LuGraduationCap size={20} />,
-          to: "#",
+          to: "/categorymanagement",
         },
         {
           title: "Course Management",
           icon: <LuGraduationCap size={20} />,
-          to: "#",
+          to: "/coursemanagement",
         },
         {
           title: "Generate Courses",
@@ -234,9 +234,9 @@ const Layout = ({ permissions }) => {
               key={subIndex}
             >
               <li
-                className={`cursor-pointer font-extralight flex items-center gap-2 p-1 pl-8 hover:bg-fuchsia-800 ${
+                className={`cursor-pointer font-extralight flex items-center gap-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
                   location.pathname === submenuitem.to
-                    ? "bg-fuchsia-800 text-black"
+                    ? "bg-[#A71CD2]"
                     : "text-gray-200 font-extralight"
                 }`}
               >
@@ -258,9 +258,9 @@ const Layout = ({ permissions }) => {
               key={subIndex}
             >
               <li
-                className={`cursor-pointer font-extralight flex items-center gap-x-2 p-1 pl-8 hover:bg-fuchsia-800 ${
+                className={`cursor-pointer font-extralight flex items-center gap-x-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
                   location.pathname === submenuitem.to
-                    ? "bg-fuchsia-800 text-black font-medium"
+                    ? "bg-[#A71CD2]"
                     : "text-gray-200 font-extralight"
                 }`}
               >

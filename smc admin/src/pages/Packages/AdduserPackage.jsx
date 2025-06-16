@@ -10,15 +10,15 @@ import { FiPlus } from "react-icons/fi";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const schema = yup.object().shape({
-  packagename: yup
-    .string()
-    .trim()
-    .required("Package name is required")
-    .transform((value) => value.toLowerCase()),
+packagename: yup
+  .string()
+  .required("Package name is required")
+  .notOneOf([""], "Please select a package"),
+
   email: yup.string().email().required("Email is required"),
 });
 const AdduserPackage = () => {
-    const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [userPackage, setUserPackage] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const navigate = useNavigate();
@@ -34,6 +34,8 @@ const AdduserPackage = () => {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
+    console.log(data);
+    
     const selectedPackage = userPackage.find(
       (plan) => plan.packagename === data.packagename
     );
@@ -79,15 +81,18 @@ const AdduserPackage = () => {
       (plan) => plan.packagename === selectedPackageName
     );
 
-    setSelectedPackage(selectedPackage); 
+    setSelectedPackage(selectedPackage);
   };
   return (
     <>
       <div className="mx-6 my-4 font-poppins h-full">
         <div className="flex justify-between items-center">
-        <p className="mb-2 mx-2 mt-4">Add a user to package</p>
-        <p className=" cursor-pointer flex  items-center gap-2 bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-4 py-1 rounded-md"><FiPlus />Bulk Upload Users</p>
-       </div>
+          <p className="mb-2 mx-2 mt-4">Add a user to package</p>
+          <p className=" cursor-pointer flex  items-center gap-2 bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-4 py-1 rounded-md">
+            <FiPlus />
+            Bulk Upload Users
+          </p>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mx-4 my-6   ">
           <div className="grid gap-2.5 ">
             <label className="col-span-12 ">
@@ -96,11 +101,11 @@ const AdduserPackage = () => {
             <div className="relative inline-block col-span-2 ">
               <select
                 {...register("packagename")}
-                defaultValue="select"
+                defaultValue=""
                 className=" w-full bg-white  text-black px-2 py-2 outline-none rounded-md "
                 onChange={handlePackageChange}
               >
-                <option value="select" disabled>
+                <option value="" disabled>
                   Select Package
                 </option>
                 {userPackage &&
@@ -113,7 +118,12 @@ const AdduserPackage = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-5 bg-gray-100 px-4 rounded-lg pointer-events-none outline-none">
                 <FaCaretDown className="text-black text-2xl" />
               </div>
+              <p className="text-red-700 col-span-12 ">
+                {errors.packagename?.message}
+              </p>
+              
             </div>
+
             <label className="col-span-12 ">
               User Email ID <span className=" text-red-600">*</span>
             </label>
@@ -123,26 +133,32 @@ const AdduserPackage = () => {
               placeholder="Enter user Email-Id"
               className=" col-span-2 bg-white  text-black px-2 py-1.5 outline-none rounded-md "
             />
+            <p className="text-red-700 col-span-12 ">{errors.email?.message}</p>
           </div>
-            <div className="flex items-center gap-4 mt-4">
-                  <button
-                    type="submit"
-                    className={`my-6 cursor-pointer text-white bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-8 py-1.5 rounded-md ${
-                      isSaving ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    disabled={isSaving}
-                  >
-                    {isSaving ? (
-                      <div className="flex text-xl gap-2">
-                        <AiOutlineLoading className="h-6 w-6 animate-spin" />
-                        <p>Saving....</p>
-                      </div>
-                    ) : (
-                      "Save"
-                    )}
-                  </button>
-                  <p  onClick={()=>navigate("/packages")} className={` cursor-pointer text-black bg-white  py-1.5 px-4 rounded-md `}>Cancel</p>
+          <div className="flex items-center gap-4 mt-4">
+            <button
+              type="submit"
+              className={`my-6 cursor-pointer text-white bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-8 py-1.5 rounded-md ${
+                isSaving ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <div className="flex text-xl gap-2">
+                  <AiOutlineLoading className="h-6 w-6 animate-spin" />
+                  <p>Saving....</p>
                 </div>
+              ) : (
+                "Save"
+              )}
+            </button>
+            <p
+              onClick={() => navigate("/packages")}
+              className={` cursor-pointer text-black bg-white  py-1.5 px-4 rounded-md `}
+            >
+              Cancel
+            </p>
+          </div>
         </form>
       </div>
     </>
