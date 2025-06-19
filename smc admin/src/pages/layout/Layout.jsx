@@ -69,7 +69,7 @@ const Layout = ({ permissions }) => {
         {
           title: "Generate Courses",
           icon: <LuGraduationCap size={20} />,
-          to: "#",
+          to: "/pregeneratecourses",
         },
       ].filter(Boolean),
     },

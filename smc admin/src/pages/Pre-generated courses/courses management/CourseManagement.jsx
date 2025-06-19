@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import PaginationBar from "../../../components/PaginationBar";
 import Image from "../../../assets/Courses.jpeg";
+import { useNavigate } from "react-router-dom";
 
 const CourseManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,6 +11,7 @@ const CourseManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
+  const navigate = useNavigate();
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -76,7 +78,7 @@ const CourseManagement = () => {
               alt="Course"
               className=" col-span-6 h-full w-full rounded-2xl  "
             />
-            <div className=" col-span-6 text-sm font-extralight px-4 leading-relaxed">
+            <div className=" col-span-6 text-xs font-extralight px-4 leading-relaxed">
               <p>
                 <span>Date:</span>12-JUN-2025
               </p>
@@ -107,7 +109,10 @@ const CourseManagement = () => {
                 <span>Completed Count:</span> 25
               </p>
             </div>
-            <div className="flex mt-2  justify-end col-span-8 -mx-2">
+            <div
+              onClick={() => navigate("viewcoursemanagement")}
+              className="flex   justify-end items-center col-span-8 -mx-2"
+            >
               <p className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm">
                 View
               </p>
@@ -119,7 +124,7 @@ const CourseManagement = () => {
               alt="Course"
               className=" col-span-6 h-full w-full rounded-2xl  "
             />
-            <div className=" col-span-6 text-sm font-extralight px-4 leading-relaxed">
+            <div className=" col-span-6 text-xs font-extralight px-4 leading-relaxed">
               <p>
                 <span>Date:</span>12-JUN-2025
               </p>
@@ -150,7 +155,7 @@ const CourseManagement = () => {
                 <span>Completed Count:</span> 25
               </p>
             </div>
-            <div className="flex mt-2  justify-end col-span-8 -mx-2">
+            <div className="flex   justify-end items-center col-span-8 -mx-2 mt-2">
               <p className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm">
                 View
               </p>

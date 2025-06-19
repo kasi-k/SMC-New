@@ -10,8 +10,13 @@ import { API } from "./Host";
 import Policy from "./pages/policy/Policy";
 import FAQ from "./pages/faq/FAQ";
 import Referral from "./pages/referral/Referral";
-import CategoryManagement from "./pages/Pre-generated courses/CategoryManagement";
 import CourseManagement from "./pages/Pre-generated courses/courses management/CourseManagement";
+import ViewCourseManagement from "./pages/Pre-generated courses/courses management/ViewCourseManagement";
+import CategoryManagement from "./pages/Pre-generated courses/category mangement/CategoryManagement";
+import AddCategoryManagement from "./pages/Pre-generated courses/category mangement/AddCategoryManagement";
+import GeneratePreGeneratedCourse from "./pages/Pre-generated courses/pregeneratecourses/GeneratePreGeneratedCourses";
+import ListPreGenerateCourses from "./pages/Pre-generated courses/pregeneratecourses/ListPreGenerateCourses";
+import ContentPreCourses from "./pages/Pre-generated courses/pregeneratecourses/ContentPreCourses";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -172,8 +177,17 @@ const App = () => {
                   <Route path="/edituser" element={<EditUser />} />
                 </>
               )}
-              <Route path="/categorymanagement" element={<CategoryManagement/>}/>
-              <Route path="/coursemanagement" element={<CourseManagement/>}/>
+              <Route path="/categorymanagement" >
+              <Route index element={<CategoryManagement/>}/>
+              <Route path="addcategorymanagement" element={<AddCategoryManagement/>}/>
+              </Route>
+              <Route path="/coursemanagement" >
+              <Route index element={<CourseManagement/>}/>
+              <Route path="viewcoursemanagement" element={<ViewCourseManagement/>}/>
+              </Route>
+              <Route path="/pregeneratecourses" element={<GeneratePreGeneratedCourse/>}/>
+              <Route path="/listpregeneratecourses" element={<ListPreGenerateCourses/>}/>
+              <Route path="/contentpregenerate" element={<ContentPreCourses/>}/>
               {memoizedFeatures["team"] && (
                 <>
                   <Route
