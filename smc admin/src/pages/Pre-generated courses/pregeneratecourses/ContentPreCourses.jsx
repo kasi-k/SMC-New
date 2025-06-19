@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-// import TruncatedText from "../../components/TruncatedText";
+import TruncatedText from "../../../components/TruncatedText";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCaretSquareLeft } from "react-icons/fa";
-// import StyledText from "../../components/StyledText";
+import StyledText from "../../../components/StyledText";
 import YouTube from "react-youtube";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -14,16 +14,13 @@ import { AiFillHome } from "react-icons/ai";
 import { HiDownload } from "react-icons/hi";
 import { RiShareFill } from "react-icons/ri";
 import { BiSolidFilePdf } from "react-icons/bi";
-// import html2pdf from 'html2pdf.js';
-
-// import robot from "../../assets/robot.png";
-import { motion } from "framer-motion";
-// import ChatWidget from "../../components/chatWidget";
-// import NotesWidget from "../../components/notesWidget";
+import html2pdf from 'html2pdf.js';
+import ChatWidget from "../../../components/ChatWidget";
+import NotesWidget from "../../../components/NotesWidget"
 // import { ThemeContext } from "../../App";
 
 const ContentPreCourses = () => {
-    const { global, setGlobal } = useContext(ThemeContext);
+;
   const [isOpen, setIsOpen] = useState(false);
   const [key, setkey] = useState("");
   const { state } = useLocation();
@@ -715,7 +712,7 @@ const ContentPreCourses = () => {
   }
 
   const redirectcourse = () => {
-    navigate("/my_courses");
+    navigate("/pregeneratecourses");
   };
 
   const renderTopicsAndSubtopics = (topics) => {

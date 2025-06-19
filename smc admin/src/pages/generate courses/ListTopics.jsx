@@ -8,7 +8,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 const ListTopics = () => {
   const { state } = useLocation();
   const [processing, setProcessing] = useState(false);
-  const { jsonData, mainTopic, type } = state || {};
+  const { jsonData, mainTopic, type,lang } = state || {};
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,6 +98,7 @@ const ListTopics = () => {
       content,
       type,
       mainTopic,
+      lang
     });
 
     if (response.data.success) {
@@ -112,6 +113,7 @@ const ListTopics = () => {
           type: type.toLowerCase(),
           courseId: response.data.courseId,
           end: "",
+          lang
         },
       });
     } else {
@@ -139,6 +141,7 @@ const ListTopics = () => {
       content,
       type,
       mainTopic,
+      lang,
     });
 
     if (response.data.success) {
@@ -153,6 +156,7 @@ const ListTopics = () => {
           type: type.toLowerCase(),
           courseId: response.data.courseId,
           end: "",
+          lang
         },
       });
     } else {

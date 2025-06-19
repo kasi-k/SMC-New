@@ -131,6 +131,7 @@ const GeneratePreGeneratedCourses = () => {
   ]);
 
   const [processing, setProcessing] = useState(false);
+  const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
   const {
@@ -144,6 +145,30 @@ const GeneratePreGeneratedCourses = () => {
 
   const watchSubtopic = watch("subtopic");
   const watchCourseType = watch("coursetype");
+
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
+  const fetchOptions = async () => {
+    try {
+      const response = await axios.get(`${API}/api/getcategorycourse`);
+      
+      if (Array.isArray(response.data.cate)) {
+        setOptions(response.data.cate);
+      } else {
+        console.error(
+          "Expected an array of  options, but got:",
+          response.data
+        );
+        setOptions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching taxes:", error);
+    }
+  };
+
 
   const onSubmit = async (data) => {
     setProcessing(true);
@@ -199,36 +224,30 @@ Everything in a single line. Generate JSON format as:
               label="Category Name"
               register={register}
               name="category"
-              options={[
-                { value: "monthly", label: "Monthly" },
-                { value: "quarterly", label: "Quarterly" },
-                { value: "halfYearly", label: "Half-Yearly" },
-                { value: "annual", label: "Annual" },
-              ]}
+              options={options.map((category) => ({
+                value: category.category,
+                label: category.category,
+              }))}
               error={errors.category?.message}
             />
             <SelectField
               label="Sub Category 1"
               register={register}
               name="subcategory1"
-              options={[
-                { value: "monthly", label: "Monthly" },
-                { value: "quarterly", label: "Quarterly" },
-                { value: "halfYearly", label: "Half-Yearly" },
-                { value: "annual", label: "Annual" },
-              ]}
+                options={options.map((category) => ({
+                value: category.subCategory1,
+                label: category.subCategory1,
+              }))}
               error={errors.subcategory1?.message}
             />
             <SelectField
               label="Sub Category 2"
               register={register}
               name="subcategory2"
-              options={[
-                { value: "monthly", label: "Monthly" },
-                { value: "quarterly", label: "Quarterly" },
-                { value: "halfYearly", label: "Half-Yearly" },
-                { value: "annual", label: "Annual" },
-              ]}
+              options={options.map((category) => ({
+                value: category.subCategory2,
+                label: category.subCategory2,
+              }))}
               error={errors.subcategory2?.message}
             />
           </div>
