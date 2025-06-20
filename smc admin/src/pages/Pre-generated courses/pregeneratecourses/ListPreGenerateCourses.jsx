@@ -14,19 +14,19 @@ const ListPreGenerateCourses = () => {
     type,
     lang,
     category,
-    subcategory1,
-    subcategory2,
+    subCategory1,
+    subCategory2,
   } = state || {};
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!jsonData) {
-      navigate("/create");
+      navigate("/pregeneratecourses");
     }
   }, []);
 
   const redirectform = () => {
-    navigate("/create");
+    navigate("/pregeneratecourses");
   };
 
   function redirectCourse() {
@@ -106,7 +106,10 @@ const ListPreGenerateCourses = () => {
       content,
       type,
       mainTopic,
-         lang,
+      lang,
+      category,
+       subCategory1,
+    subCategory2,
     });
 
     if (response.data.success) {
@@ -121,6 +124,10 @@ const ListPreGenerateCourses = () => {
           type: type.toLowerCase(),
           courseId: response.data.courseId,
           end: "",
+          lang,
+          category,
+      subCategory1,
+    subCategory2,
         },
       });
     } else {
@@ -149,9 +156,9 @@ const ListPreGenerateCourses = () => {
       type,
       mainTopic,
       category,
-      subcategory1,
-      subcategory2,
-      lang
+     subCategory1,
+    subCategory2,
+      lang,
     });
 
     if (response.data.success) {
@@ -166,7 +173,10 @@ const ListPreGenerateCourses = () => {
           type: type.toLowerCase(),
           courseId: response.data.courseId,
           end: "",
-          lang
+          lang,
+          category,
+         subCategory1,
+    subCategory2,
         },
       });
     } else {

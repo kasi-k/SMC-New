@@ -12,8 +12,8 @@ import { AiOutlineLoading } from "react-icons/ai";
 
 const schema = yup.object().shape({
   category: yup.string().required("Category is required"),
-  subcategory1: yup.string().required("Sub Category 1 is required"),
-  subcategory2: yup.string().required("Sub Category 2 is required"),
+  subCategory1: yup.string().required("Sub Category 1 is required"),
+  subCategory2: yup.string().required("Sub Category 2 is required"),
   topic: yup.string().required("Topic is required"),
   language: yup.string().required("Language is required"),
 
@@ -172,7 +172,7 @@ const GeneratePreGeneratedCourses = () => {
 
   const onSubmit = async (data) => {
     setProcessing(true);
-    const { topic, category, subcategory1, subcategory2, language } = data;
+    const { topic, category, subCategory1, subCategory2, language } = data;
     const prompt = `Strictly in ${language}, Generate a list of Strict ${
       data.subtopic
     } topics and any number of subtopics for each topic under:
@@ -202,10 +202,10 @@ Everything in a single line. Generate JSON format as:
           jsonData: json,
           mainTopic: topic.toLowerCase(),
           type: data.coursetype,
-          lang: "English",
+          lang: data.language,
           category,
-          subcategory1,
-          subcategory2,
+          subCategory1,
+          subCategory2,
         },
       });
     } catch (err) {
@@ -233,22 +233,22 @@ Everything in a single line. Generate JSON format as:
             <SelectField
               label="Sub Category 1"
               register={register}
-              name="subcategory1"
+              name="subCategory1"
                 options={options.map((category) => ({
                 value: category.subCategory1,
                 label: category.subCategory1,
               }))}
-              error={errors.subcategory1?.message}
+              error={errors.subCategory1?.message}
             />
             <SelectField
               label="Sub Category 2"
               register={register}
-              name="subcategory2"
+              name="subCategory2"
               options={options.map((category) => ({
                 value: category.subCategory2,
                 label: category.subCategory2,
               }))}
-              error={errors.subcategory2?.message}
+              error={errors.subCategory2?.message}
             />
           </div>
           <div>
