@@ -9,52 +9,60 @@ import { API, formatDate, formatDate1 } from "../../../Host";
 const CourseManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState("");
+  const [subcategory1, setSubCategory1] = useState("");
+  const [subcategory2, setSubCategory2] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
-  const [courses, setCourses] = useState([]);
-    const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`${API}/api/precourseslimit`, {
+          params: {
+            page: currentPage,
+            limit: itemsPerPage,
+            search: searchQuery,
+            category: category,
+            subCategory1: subcategory1,
+            subCategory2: subcategory2,
+          },
+        });
+        const responseData = response.data.data;
+
+        setCurrentItems(responseData);
+        setTotalPages(response.data.metadata.totalPages);
+        setTotalItems(response.data.metadata.totalItems);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
     fetchCourses();
-  }, []);
+  }, [currentPage, itemsPerPage, searchQuery,category, subcategory1, subcategory2]);
 
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get(`${API}/api/preallcourses`);
-      console.log(response);
-
-      const responseData = response.data;
-      setCourses(responseData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-    useEffect(() => {
+  useEffect(() => {
     fetchOptions();
   }, []);
 
   const fetchOptions = async () => {
     try {
       const response = await axios.get(`${API}/api/getcategorycourse`);
-      
+
       if (Array.isArray(response.data.cate)) {
         setOptions(response.data.cate);
       } else {
-        console.error(
-          "Expected an array of  options, but got:",
-          response.data
-        );
+        console.error("Expected an array of  options, but got:", response.data);
         setOptions([]);
       }
     } catch (error) {
       console.error("Error fetching taxes:", error);
     }
   };
-
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -81,43 +89,66 @@ const CourseManagement = () => {
             </button>
           </p>
           <select
-            defaultValue=""
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setCurrentPage(1);
+            }}
             className="text-white placeholder:text-white rounded-full px-4 py-2 bg-darkest-blue outline-none"
           >
             <option value="" disabled>
               Select Category
             </option>
-            <option value="a">A</option>
-            <option value="b">B</option>
-            <option value="c">C</option>
+            {options.map((cat) => (
+              <option key={cat.category} value={cat.category}>
+                {cat.category}
+              </option>
+            ))}
           </select>
+
           <select
-            defaultValue=""
+            value={subcategory1}
+            onChange={(e) => {
+              setSubCategory1(e.target.value);
+              setCurrentPage(1);
+            }}
             className="text-white placeholder:text-white rounded-full px-4 py-2 bg-darkest-blue outline-none"
           >
             <option value="" disabled>
               Select Sub Category 1
             </option>
-            <option value="a">A</option>
-            <option value="b">B</option>
-            <option value="c">C</option>
+            {options.map((cat) => (
+              <option key={cat.subCategory1} value={cat.subCategory1}>
+                {cat.subCategory1}
+              </option>
+            ))}
           </select>
+
           <select
-            defaultValue=""
+            value={subcategory2}
+            onChange={(e) => {
+              setSubCategory2(e.target.value);
+              setCurrentPage(1);
+            }}
             className="text-white placeholder:text-white rounded-full px-4 py-2 bg-darkest-blue outline-none"
           >
             <option value="" disabled>
               Select Sub Category 2
             </option>
-            <option value="a">A</option>
-            <option value="b">B</option>
-            <option value="c">C</option>
+            {options.map((cat) => (
+              <option key={cat.subCategory2} value={cat.subCategory2}>
+                {cat.subCategory2}
+              </option>
+            ))}
           </select>
         </div>
         <div className=" mx-2 grid grid-cols-1  md:grid-cols-6 lg:grid-cols-12  gap-4 py-4  ">
-          {courses &&
-            courses.map((precourse,index) => (
-              <div className="col-span-6 grid grid-cols-12  p-4 text-white rounded-2xl bg-darkest-blue "key={index}>
+          {currentItems &&
+            currentItems.map((precourse, index) => (
+              <div
+                className="col-span-6 grid grid-cols-12  p-4 text-white rounded-2xl bg-darkest-blue "
+                key={index}
+              >
                 <img
                   src={Image}
                   alt="Course"
@@ -125,12 +156,14 @@ const CourseManagement = () => {
                 />
                 <div className=" col-span-6 text-xs font-extralight px-4 leading-relaxed">
                   <p>
-                    <span>Date:</span>{formatDate(precourse.createdAt)}
+                    <span>Date:</span>
+                    {formatDate(precourse.createdAt)}
                   </p>
                   <p className="capitalize">{precourse.mainTopic}</p>
 
                   <p>
-                    <span>Type:</span>{precourse.type}
+                    <span>Type:</span>
+                    {precourse.type}
                   </p>
                   <p>
                     <span>No Of subtopic:</span> 05
@@ -142,7 +175,8 @@ const CourseManagement = () => {
                     <span>Category:</span> {precourse.category}
                   </p>
                   <p>
-                    <span>Sub Category 1:</span>{precourse.subCategory1}
+                    <span>Sub Category 1:</span>
+                    {precourse.subCategory1}
                   </p>
                   <p>
                     <span>Sub Category 2:</span> {precourse.subCategory2}
