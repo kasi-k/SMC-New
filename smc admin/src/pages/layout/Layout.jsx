@@ -96,11 +96,11 @@ const Layout = ({ permissions }) => {
     //   icon: <HiOutlineUserGroup />,
     //   to: "#",
     // },
-    {
-      title: "Refer & Earn",
-      icon: <LiaRupeeSignSolid size={20} />,
-      to: "/referrals",
-    },
+    // {
+    //   title: "Refer & Earn",
+    //   icon: <LiaRupeeSignSolid size={20} />,
+    //   to: "/referrals",
+    // },
     // {
     //   title: "Notifications",
     //   icon: <IoNotificationsOutline size={20} />,
