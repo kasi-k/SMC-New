@@ -91,21 +91,21 @@ const Layout = ({ permissions }) => {
       to: "/courses",
     },
     { title: "Generate course", icon: <TbBulb size={20} />, to: "/create" },
-    {
-      title: "Study Groups",
-      icon: <HiOutlineUserGroup />,
-      to: "#",
-    },
+    // {
+    //   title: "Study Groups",
+    //   icon: <HiOutlineUserGroup />,
+    //   to: "#",
+    // },
     {
       title: "Refer & Earn",
       icon: <LiaRupeeSignSolid size={20} />,
       to: "/referrals",
     },
-    {
-      title: "Notifications",
-      icon: <IoNotificationsOutline size={20} />,
-      to: "#",
-    },
+    // {
+    //   title: "Notifications",
+    //   icon: <IoNotificationsOutline size={20} />,
+    //   to: "#",
+    // },
 
     permissions["team"] && {
       title: "Team",

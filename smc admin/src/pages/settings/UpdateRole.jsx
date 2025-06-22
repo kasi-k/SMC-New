@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import dashboard from "../../assets/dashboard.png";
-import Package from "../../assets/money.png";
-import course from "../../assets/course.png";
-import gc from "../../assets/book.png";
-import subscribe from "../../assets/subscription.png";
-import user from "../../assets/user.png";
-import team from "../../assets/team.png";
-import help from "../../assets/services.png";
-import report from "../../assets/report.png";
-import setting from "../../assets/settings.png";
+import { LuGraduationCap } from "react-icons/lu";
+import { BsChevronDown } from "react-icons/bs";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { LiaRupeeSignSolid } from "react-icons/lia";
+import { HiOutlineUserGroup } from "react-icons/hi2";
+import { TbBulb } from "react-icons/tb";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { BiBarChartAlt } from "react-icons/bi";
+import { IoSettingsOutline } from "react-icons/io5";
 import axios from "axios";
 import { API } from "../../Host";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -19,7 +18,7 @@ const UpdateRole = ({ onClose }) => {
   const [features, setFeatures] = useState([
     {
       name: "Dashboard",
-      icon: dashboard,
+        icon: <LuLayoutDashboard size={20} />,
       value: "dashboard",
       permissions: [
         { label: "Total Courses Generated", value: "totalcourse" },
@@ -35,7 +34,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Packages",
-      icon: Package,
+   icon: <LuLayoutDashboard size={20} />,
       value: "packages",
       permissions: [
         { label: "Can view Packages", value: "view" },
@@ -46,7 +45,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Courses",
-      icon: course,
+       icon: <LuLayoutDashboard size={20} />,
       value: "courses",
       permissions: [
         { label: "Can view Courses", value: "view" },
@@ -56,13 +55,13 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Subscriptions",
-      icon: subscribe,
+      icon: <LuLayoutDashboard size={20} />,
       value: "subscription",
       permissions: [{ label: "Can view Subscriptions", value: "view" }],
     },
     {
       name: "Users",
-      icon: user,
+  icon: <LuLayoutDashboard size={20} />,
       value: "users",
       permissions: [
         { label: "Can View Users", value: "view" },
@@ -73,7 +72,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Team",
-      icon: team,
+      icon: <LuLayoutDashboard size={20} />,
       value: "team",
       permissions: [
         { label: "Can View Team", value: "view" },
@@ -84,7 +83,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Help & Support",
-      icon: help,
+    icon: <LuLayoutDashboard size={20} />,
       value: "support",
       permissions: [
         { label: "Can view Tickets", value: "view" },
@@ -95,7 +94,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Reports",
-      icon: report,
+    icon: <LuLayoutDashboard size={20} />,
       value: "report",
       permissions: [
         { label: "Can view Reports", value: "view" },
@@ -104,7 +103,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Settings",
-      icon: setting,
+  icon: <LuLayoutDashboard size={20} />,
       value: "setting",
       permissions: [
         { label: "Roles & permission", value: "roles" },
@@ -223,10 +222,10 @@ const UpdateRole = ({ onClose }) => {
           {features.map((feature, featureIndex) => (
             <div className="grid mb-3 text-base" key={featureIndex}>
               <div className="flex gap-3">
-                <label className="flex items-center gap-2 w-3/6">
-                  <img className="size-5" src={feature.icon} alt="icons" />
-                  {feature.name}
-                </label>
+                 <label className="flex items-center gap-2 w-3/6">
+                 <span className="size-5 text-xl">{feature.icon}</span>
+                {feature.name}
+              </label>
                 <input
                   type="checkbox"
                   checked={accessLevels.some(

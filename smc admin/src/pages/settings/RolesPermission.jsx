@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AddRole from "./AddRole";
-import SettingImage from "../../assets/setting.png";
 import EditImage from "../../assets/edit.png";
 import BinImage from "../../assets/bin.png";
 import { useNavigate } from "react-router-dom";
