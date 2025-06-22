@@ -119,6 +119,7 @@ const App = () => {
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/content" element={<Content />} />
+               <Route path="/contentpregenerate" element={<ContentPreCourses/>}/>
             <Route path="/" element={<Layout permissions={memoizedFeatures} />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/adduserPackage" element={<AdduserPackage />} />
@@ -187,7 +188,7 @@ const App = () => {
               </Route>
               <Route path="/pregeneratecourses" element={<GeneratePreGeneratedCourse/>}/>
               <Route path="/listpregeneratecourses" element={<ListPreGenerateCourses/>}/>
-              <Route path="/contentpregenerate" element={<ContentPreCourses/>}/>
+           
               {memoizedFeatures["team"] && (
                 <>
                   <Route

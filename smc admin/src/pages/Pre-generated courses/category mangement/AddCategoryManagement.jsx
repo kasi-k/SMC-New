@@ -39,7 +39,6 @@ const AddCategoryManagement = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
     const formData = {
       category: data.category,
       subCategory1: [data.subCategory1],
@@ -47,7 +46,6 @@ const AddCategoryManagement = () => {
     };
     try {
       const response = await axios.post(`${API}/api/categorycourse`, formData);
-      console.log(response);
 
       if (response.status === 201) {
         toast.success("Category Course created Successfully");

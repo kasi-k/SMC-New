@@ -166,7 +166,7 @@ const ListPreGenerateCourses = () => {
       localStorage.setItem("courseId", response.data.courseId);
       localStorage.setItem("first", response.data.completed);
       localStorage.setItem("jsonData", JSON.stringify(jsonData));
-      navigate("/content", {
+      navigate("/contentpregenerate", {
         state: {
           jsonData: jsonData,
           mainTopic: mainTopic.toUpperCase(),

@@ -299,12 +299,12 @@ Everything in a single line. Generate JSON format as:
               error={errors.language?.message}
             />
 
-            <InputField
+            {/* <InputField
               label="Thumbnail"
               register={register}
               name="thumbnail"
               error={errors.duration?.message}
-            />
+            /> */}
           </div>
         </div>
         <div className="">

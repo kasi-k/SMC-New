@@ -69,6 +69,25 @@ const CourseManagement = () => {
       setCurrentPage(pageNumber);
     }
   };
+    const handleCourse = (content, mainTopic, type, courseId, completed, end) => {
+    const jsonData = JSON.parse(content);
+    localStorage.setItem("courseId", courseId);
+    localStorage.setItem("first", completed);
+    localStorage.setItem("jsonData", JSON.stringify(jsonData));
+    let ending = "";
+    if (completed) {
+      ending = end;
+    }
+    navigate("/content", {
+      state: {
+        jsonData: jsonData,
+        mainTopic: mainTopic.toUpperCase(),
+        type: type.toLowerCase(),
+        courseId: courseId,
+        end: ending,
+      },
+    });
+  };
   return (
     <>
       <div className="mx-2 mt-6 font-poppins ">
@@ -189,10 +208,19 @@ const CourseManagement = () => {
                   </p>
                 </div>
                 <div
-                  onClick={() => navigate("viewcoursemanagement")}
+               
                   className="flex mt-2  justify-end items-center col-span-8 -mx-2"
                 >
-                  <p className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm">
+                  <p onClick={() =>
+                            handleCourse(
+                              precourse.content,
+                              precourse.mainTopic,
+                              precourse.type,
+                              precourse._id,
+                              precourse.completed,
+                              precourse.end
+                            )
+                          } className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm">
                     View
                   </p>
                 </div>

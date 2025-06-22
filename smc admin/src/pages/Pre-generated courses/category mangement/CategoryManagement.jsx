@@ -1,14 +1,40 @@
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { BiSolidEdit } from "react-icons/bi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API } from "../../../Host";
 
 const CategoryManagement = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+const[currentItems,setCurrentItems]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const navigate=useNavigate();
+    useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await axios.get(`${API}/api/getcategorycourse`, {
+          // params: {
+          //   page: currentPage,
+          //   limit: itemsPerPage,
+          //   search: searchQuery,
+          //   category: category,
+          //   subCategory1: subcategory1,
+          //   subCategory2: subcategory2,
+          // },
+        });
+        const responseData = response.data.cate;
+
+        setCurrentItems(responseData);
+  
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCategory();
+  }, []);
 
   return (
     <>
@@ -47,9 +73,9 @@ const CategoryManagement = () => {
                 <th className=" border border-slate-100 text-nowrap">
                   Category Name
                 </th>
-                <th className=" border border-slate-100">Sub Category 1 ID</th>
+                {/* <th className=" border border-slate-100">Sub Category 1 ID</th> */}
                 <th className="border border-slate-100">Sub Category 1 Name</th>
-                <th className=" border border-slate-100">Sub Category 2 ID</th>
+                {/* <th className=" border border-slate-100">Sub Category 2 ID</th> */}
                 <th className=" border border-slate-100">
                   Sub Category 2 Name
                 </th>
@@ -58,16 +84,17 @@ const CategoryManagement = () => {
               </tr>
             </thead>
             <tbody className=" ">
-              <tr className=" text-nowrap text-center bg-white text-black">
-                <td className="border border-slate-100 ">5348</td>
-                <td className="border border-slate-100 capitalize">Technology</td>
-                <td className="border border-slate-100 capitalize">5348</td>
+              {currentItems&& currentItems.map((data,index)=>(
+              <tr className=" text-nowrap text-center bg-white text-black" key={index}>
+                <td className="border border-slate-100 ">{data._id}</td>
+                <td className="border border-slate-100 capitalize">{data.category}</td>
+                {/* <td className="border border-slate-100 capitalize">5348</td> */}
                 <td className="border border-slate-100">
-                Development
+                {data.subCategory1[0]}
                 </td>
-                <td className="border border-slate-100">5348</td>
+                {/* <td className="border border-slate-100">5348</td> */}
                 <td className="border border-slate-100  capitalize">
-                  Python
+                  {data.subCategory2[0]}
                 </td>
                 <td className="border border-slate-100 capitalize">
                   {" "}
@@ -90,6 +117,7 @@ const CategoryManagement = () => {
                                  
                                  </td>
               </tr>
+              ))}
             </tbody>
           </table>
         </div>

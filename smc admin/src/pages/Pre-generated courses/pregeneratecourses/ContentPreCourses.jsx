@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TruncatedText from "../../../components/TruncatedText";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
@@ -10,26 +10,16 @@ import axios from "axios";
 import { IoChatbubbleEllipses, IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 import { API } from "../../../Host";
-import { AiFillHome } from "react-icons/ai";
-import { HiDownload } from "react-icons/hi";
-import { RiShareFill } from "react-icons/ri";
-import { BiSolidFilePdf } from "react-icons/bi";
-import html2pdf from 'html2pdf.js';
-import ChatWidget from "../../../components/ChatWidget";
-import NotesWidget from "../../../components/NotesWidget"
-// import { ThemeContext } from "../../App";
-
+import Headers from "../../layout/Headers";
+import AI from "../../../assets/Ai.png";
+import { motion } from "framer-motion";
 const ContentPreCourses = () => {
-;
   const [isOpen, setIsOpen] = useState(false);
   const [key, setkey] = useState("");
   const { state } = useLocation();
-  const { mainTopic, type, courseId, end, pass, lang } = state || {};
-
+  const { mainTopic, type, courseId, end } = state || {};
   const jsonData = JSON.parse(localStorage.getItem("jsonData"));
- 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const [selected, setSelected] = useState("");
   const [theory, setTheory] = useState("");
   const [media, setMedia] = useState("");
@@ -41,32 +31,25 @@ const ContentPreCourses = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const handleOnClose = () => setIsOpenDrawer(false);
   const [isAnimationVisible, setIsAnimationVisible] = useState(false);
-  const user = localStorage.getItem("user");
 
   const CountDoneTopics = () => {
     let doneCount = 0;
     let totalTopics = 0;
 
     jsonData[mainTopic.toLowerCase()].forEach((topic) => {
-
-        topic.subtopics.forEach((subtopic) => {
-
-            if (subtopic.done) {
-                doneCount++;
-            }
-            totalTopics++;
-        });
+      topic.subtopics.forEach((subtopic) => {
+        if (subtopic.done) {
+          doneCount++;
+        }
+        totalTopics++;
+      });
     });
-    totalTopics = totalTopics + 1;
-    // if(pass){
-    //     totalTopics = totalTopics - 1;
-    // }
     const completionPercentage = Math.round((doneCount / totalTopics) * 100);
     setPercentage(completionPercentage);
-    if (completionPercentage >= '100') {
-        setIsCompleted(true);
+    if (completionPercentage >= "100") {
+      setIsCompleted(true);
     }
-}
+  };
 
   const [openTopics, setOpenTopics] = useState({});
 
@@ -87,282 +70,133 @@ const ContentPreCourses = () => {
     width: "100%",
   };
 
-  async function redirectExam() {
-    const id = toast.loading("Please wait...");
-    const mainTopicExam = jsonData[mainTopic.toLowerCase()];
-    let subtopicsString = "";
-    mainTopicExam.map((topicTemp) => {
-      let titleOfSubTopic = topicTemp.title;
-      subtopicsString = subtopicsString + " , " + titleOfSubTopic;
-    });
-
-    const postURL = API + "/api/aiexam";
-    const response = await axios.post(postURL, {
-      courseId,
-      mainTopic,
-      subtopicsString,
-      lang,
-    });
-    if (response.data.success) {
-      const element = document.documentElement; // or you can use a specific container if you want
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        // Firefox
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        // Chrome, Safari and Opera
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        // IE/Edge
-        element.msRequestFullscreen();
-      } else {
-        console.error("Full-screen mode is not supported by this browser.");
-      }
-      let questions = JSON.parse(response.data.message);
-
-      
-      navigate("/exam", {
-        state: { topic: mainTopic, courseId: courseId, questions: questions },
-      });
-      toast.update(id, {
-        render: "Starting Quiz",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-    } else {
-      toast.update(id, {
-        render: "Internal Server Error",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-    }
-  }
-
-  async function htmlDownload() {
-    const id = toast.loading("Please wait exporting...");
-    // Generate the combined HTML content
-    const combinedHtml = await getCombinedHtml(
-      mainTopic,
-      jsonData[mainTopic.toLowerCase()]
-    );
-
-    // Create a temporary div element
-    const tempDiv = document.createElement("div");
-    tempDiv.style.width = "100%"; // Ensure div is 100% width
-    tempDiv.style.height = "100%"; // Ensure div is 100% height
-    tempDiv.innerHTML = combinedHtml;
-    document.body.appendChild(tempDiv);
-
-    // Create the PDF options
-    const options = {
-      filename: `${mainTopic}.pdf`,
-      image: { type: "jpeg", quality: 1 },
-      margin: [15, 15, 15, 15],
-      pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-      html2canvas: {
-        scale: 2,
-        logging: false,
-        scrollX: 0,
-        scrollY: 0,
-        useCORS: true,
-      },
-      jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
-    };
-
-    // Generate the PDF
-    html2pdf()
-      .from(tempDiv)
-      .set(options)
-      .save()
-      .then(() => {
-        // Save the PDF
-        document.body.removeChild(tempDiv);
-        toast.update(id, {
-          render: "Done!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-        });
-      });
-  }
-
-  async function getCombinedHtml(mainTopic, topics) {
-    async function toDataUrl(url) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.onload = function () {
-          const reader = new FileReader();
-          reader.onloadend = function () {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(xhr.response);
-        };
-
-        xhr.onerror = function () {
-          reject({
-            status: xhr.status,
-            statusText: xhr.statusText,
-          });
-        };
-
-        xhr.open("GET", url);
-        xhr.responseType = "blob";
-        xhr.send();
-      }).catch((error) => {
-        console.error(`Failed to fetch image at ${url}:`, error);
-        return ""; // Fallback or placeholder
-      });
-    }
-
-    const topicsHtml = topics
-      .map(
-        (topic) => `
-      <h3 style="font-size: 18pt; font-weight: bold; margin: 0; margin-top: 15px;">${
-        topic.title
-      }</h3>
-      ${topic.subtopics
-        .map(
-          (subtopic) => `
-          <p style="font-size: 16pt; margin-top: 10px;">${subtopic.title}</p>
-      `
-        )
-        .join("")}
-  `
-      )
-      .join("");
-
-    const theoryPromises = topics.map(async (topic) => {
-      const subtopicPromises = topic.subtopics.map(
-        async (subtopic, index, array) => {
-          const imageUrl =
-            type === "text & image course"
-              ? await toDataUrl(subtopic.image)
-              : ``;
-          return `
-          <div>
-              <p style="font-size: 16pt; margin-top: 20px; font-weight: bold;">
-                  ${subtopic.title}
-              </p>
-              <div style="font-size: 12pt; margin-top: 15px;">
-                  ${
-                    subtopic.done
-                      ? `
-                          ${
-                            type === "text & image course"
-                              ? imageUrl
-                                ? `<img style="margin-top: 10px;" src="${imageUrl}" alt="${subtopic.title} image">`
-                                : `<a style="color: #0000FF;" href="${subtopic.image}" target="_blank">View example image</a>`
-                              : `<a style="color: #0000FF;" href="https://www.youtube.com/watch?v=${subtopic.youtube}" target="_blank" rel="noopener noreferrer">Watch the YouTube video on ${subtopic.title}</a>`
-                          }
-                          <div style="margin-top: 10px;">${
-                            subtopic.theory
-                          }</div>
-                      `
-                      : `<div style="margin-top: 10px;">Please visit ${subtopic.title} topic to export as PDF. Only topics that are completed will be added to the PDF.</div>`
-                  }
-              </div>
-          </div>
-      `;
-        }
-      );
-      const subtopicHtml = await Promise.all(subtopicPromises);
-      return `
-          <div style="margin-top: 30px;">
-              <h3 style="font-size: 18pt; text-align: center; font-weight: bold; margin: 0;">
-                  ${topic.title}
-              </h3>
-              ${subtopicHtml.join("")}
-          </div>
-      `;
-    });
-    const theoryHtml = await Promise.all(theoryPromises);
-
-    return `
-  <div class="html2pdf__page-break" 
-       style="display: flex; align-items: center; justify-content: center; text-align: center; margin: 0 auto; max-width: 100%; height: 11in;">
-      <h1 style="font-size: 30pt; font-weight: bold; margin: 0;">
-          ${mainTopic}
-      </h1>
-  </div>
-  <div class="html2pdf__page-break" style="text-align: start; margin-top: 30px; margin-right: 16px; margin-left: 16px;">
-      <h2 style="font-size: 24pt; font-weight: bold; margin: 0;">Index</h2>
-      <br>
-      <hr>
-      ${topicsHtml}
-  </div>
-  <div style="text-align: start; margin-right: 16px; margin-left: 16px;">
-      ${theoryHtml.join("")}
-  </div>
-  `;
-  }
-
   async function finish() {
-    if (sessionStorage.getItem('first') === 'true') {
-        if (!end) {
-            const today = new Date();
-            const formattedDate = today.toLocaleDateString('en-GB');
-            navigate('/certificate', { state: { courseTitle: mainTopic, end: formattedDate } });
-        } else {
-            navigate('/certificate', { state: { courseTitle: mainTopic, end: end } });
-        }
-
+    if (localStorage.getItem("first") === "true") {
+      if (!end) {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString("en-GB");
+        navigate("/viewcertificate", {
+          state: { courseTitle: mainTopic, end: formattedDate },
+        });
+      } else {
+        navigate("/viewcertificate", {
+          state: { courseTitle: mainTopic, end: end },
+        });
+      }
     } else {
-        const dataToSend = {
-            courseId: courseId
-        };
-        try {
-            const postURL = API + '/api/finish';
-            const response = await axios.post(postURL, dataToSend);
-            if (response.data.success) {
-                const today = new Date();
-                const formattedDate = today.toLocaleDateString('en-GB');
-                sessionStorage.setItem('first', 'true');
-                sendEmail(formattedDate);
-            } else {
-                finish()
-            }
-        } catch (error) {
-            finish()
+      const dataToSend = {
+        courseId: courseId,
+      };
+      try {
+        const postURL = API + "/api/finish";
+        const response = await axios.post(postURL, dataToSend);
+        if (response.data.success) {
+          const today = new Date();
+          const formattedDate = today.toLocaleDateString("en-GB");
+          localStorage.setItem("first", "true");
+          sendEmail(formattedDate);
+        } else {
+          finish();
         }
+      } catch (error) {
+        finish();
+      }
     }
-}
+  }
 
   async function sendEmail(formattedDate) {
     const userName = localStorage.getItem("fname");
     const email = localStorage.getItem("email");
-    const html = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  </head>
-  <body style="margin-left:auto;margin-right:auto;margin-top:auto;margin-bottom:auto;background-color:rgb(255,255,255);font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';">
-    <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:37.5em;margin-left:auto;margin-right:auto;margin-top:40px;margin-bottom:40px;width:465px;border-radius:0.25rem;border-width:1px;border-style:solid;border-color:rgb(234,234,234);padding:20px">
-      <tr style="width:100%">
-        <td>
-          <h1 style="margin-left:0px;margin-right:0px;margin-top:30px;margin-bottom:30px;padding:0px;text-align:center;font-size:24px;font-weight:400;color:rgb(0,0,0)">Congratulations on Completing Your Course!</h1>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">Hi <strong>${userName}</strong>,</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">Congratulations on completing the course <strong>"${mainTopic}"</strong> on Pick My Course! We're thrilled to see you achieve your learning goals. You've demonstrated dedication and a thirst for knowledge, and we commend you for your accomplishment.</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">To celebrate your success, we've prepared a certificate of completion for you. You can download it here:</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">We encourage you to share your achievement with your friends and colleagues on social media using the hashtag <strong>#SeekMyCourseGrad</strong>.</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">What's next? Continue your learning journey with Pick My Course! Explore our vast library of courses and discover new topics to master.</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">Keep learning, keep growing!</p>
-          <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">The <strong>Pick My Course</strong> Team</p>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-`;
+    const html = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="initial-scale=1.0">
+            <title>Certificate of Completion</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
+            <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                text-align: center;
+                background-color: #fff;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+        
+            .certificate {
+                border: 10px solid #000;
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 50px;
+                background-color: #fff;
+                position: relative;
+                color: #000;
+                text-align: center;
+            }
+        
+            h1 {
+                font-weight: 900;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+        
+            h4 {
+                font-weight: 900;
+                text-align: center;
+                font-size: 20px;
+            }
+        
+            h2 {
+                font-weight: 700;
+                font-size: 18px;
+                margin-top: 10px;
+                margin-bottom: 5px;
+                text-decoration: underline;
+            }
+        
+            h3 {
+                font-weight: 700;
+                text-decoration: underline;
+                font-size: 16px;
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+        
+            p {
+                font-weight: 400;
+                line-height: 1.5;
+            }
+        
+            img {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+                text-align: center;
+                align-self: center;
+            }
+            </style>
+        </head>
+        <body>
+        
+        <div class="certificate">
+        <h1>Certificate of Completion 🥇</h1>
+        <p>This is to certify that</p>
+        <h2>${userName}</h2>
+        <p>has successfully completed the course on</p>
+        <h3>${mainTopic}</h3>
+        <p>on ${formattedDate}.</p>
+    
+        <div class="signature">
+            <img src=''>
+            <h4>''</h4>
+        </div>
+    </div>
+        
+        </body>
+        </html>`;
 
     try {
       const postURL = API + "/api/sendcertificate";
@@ -428,7 +262,6 @@ const ContentPreCourses = () => {
       CountDoneTopics();
     }
   }, []);
-
   useEffect(() => {
     setIsAnimationVisible(true);
 
@@ -457,7 +290,7 @@ const ContentPreCourses = () => {
         const id = toast.loading("Please wait...");
         sendVideo(query, topics, sub, id, mSubTopic.title);
       } else {
-        const prompt = `Strictly in ${lang}, Explain me about this subtopic of ${mainTopic} with examples :- ${mSubTopic.title}. Please Strictly Don't Give Additional Resources And Images.`;
+        const prompt = `Explain me about this subtopic of ${mainTopic} with examples :- ${mSubTopic.title}. Please Strictly Don't Give Additional Resources And Images.`;
         const promptImage = `Example of ${mSubTopic.title} in ${mainTopic}`;
         const id = toast.loading("Please wait...");
         sendPrompt(prompt, promptImage, topics, sub, id);
@@ -472,7 +305,6 @@ const ContentPreCourses = () => {
         setMedia(mSubTopic.image);
       }
     }
-    setIsSidebarOpen(false);
   };
 
   async function sendPrompt(prompt, promptImage, topics, sub, id) {
@@ -574,8 +406,6 @@ const ContentPreCourses = () => {
   async function updateCourse() {
     CountDoneTopics();
     localStorage.setItem("jsonData", JSON.stringify(jsonData));
-
-    
     const dataToSend = {
       content: JSON.stringify(jsonData),
       courseId: courseId,
@@ -619,14 +449,14 @@ const ContentPreCourses = () => {
         const generatedText = res.data.url;
         const allText = generatedText.map((item) => item.text);
         const concatenatedText = allText.join(" ");
-        const prompt = `Strictly in ${lang}, Summarize this theory in a teaching way :- ${concatenatedText}.`;
+        const prompt = `Summarize this theory in a teaching way :- ${concatenatedText}.`;
         sendSummery(prompt, url, mTopic, mSubTopic, id);
       } catch (error) {
-        const prompt = `Strictly in ${lang}, Explain me about this subtopic of ${mainTopic} with examples :- ${subtop}. Please Strictly Don't Give Additional Resources And Images.`;
+        const prompt = `Explain me about this subtopic of ${mainTopic} with examples :- ${subtop}. Please Strictly Don't Give Additional Resources And Images.`;
         sendSummery(prompt, url, mTopic, mSubTopic, id);
       }
     } catch (error) {
-      const prompt = `Strictly in ${lang}, Explain me about this subtopic of ${mainTopic} with examples :- ${subtop}.  Please Strictly Don't Give Additional Resources And Images.`;
+      const prompt = `Explain me about this subtopic of ${mainTopic} with examples :- ${subtop}.  Please Strictly Don't Give Additional Resources And Images.`;
       sendSummery(prompt, url, mTopic, mSubTopic, id);
     }
   }
@@ -712,19 +542,18 @@ const ContentPreCourses = () => {
   }
 
   const redirectcourse = () => {
-    navigate("/pregeneratecourses");
+    navigate("/viewcourse");
   };
 
   const renderTopicsAndSubtopics = (topics) => {
     return (
       <>
         <span
-          className=" flex gap-2 mx-4  items-center text-white font-poppins font-extralight "
+          className=" flex gap-2 mx-4 items-center text-white font-poppins font-extralight "
           onClick={redirectcourse}
-          // onClick={() => setIsSidebarOpen(false)}
         >
-          <FaCaretSquareLeft className="text-lg" />
-          <p className="my-3 "> Back to Home</p>
+          <FaCaretSquareLeft className="text-lg cursor-pointer" />
+          <p className="my-3 cursor-pointer "> Back to Home</p>
         </span>
         <div className=" font-poppins font-extralight ">
           {topics.map((topic) => (
@@ -733,10 +562,10 @@ const ContentPreCourses = () => {
                 <button
                   onClick={() => handleOpenClose(topic.title)}
                   type="button"
-                  className={`inline-flex  justify-between w-full text-left text-sm  text-white px-6 py-2.5  ${
+                  className={`inline-flex  justify-between w-full text-left text-lg  text-white px-6 py-2.5 ${
                     openTopics[topic.title]
-                      ? "bg-teal-500"
-                      : "border border-teal-500 mt-0.5"
+                      ? "bg-gradient-to-r from-[#110038] to-[#08006B]"
+                      : ""
                   }`}
                 >
                   {topic.title}
@@ -748,29 +577,26 @@ const ContentPreCourses = () => {
                 </button>
 
                 {openTopics[topic.title] && (
-                  <div className="px-1">
+                  <div className="px-5">
                     <div
-                      className="py-1"
+                      className="py-0.5"
                       role="menu"
                       aria-orientation="vertical"
                     >
                       {topic.subtopics.map((subtopic) => (
-                        <>
-                          <p
-                            key={subtopic.title}
-                            onClick={() =>
-                              handleSelect(topic.title, subtopic.title)
-                            }
-                            className="flex py-1.5 px-2 justify-start gap-5 text-sm items-center font-extralight text-white cursor-pointer "
-                            role="menuitem"
-                          >
-                            {subtopic.title}
-                            {subtopic.done && (
-                              <FaCheck className="ml-2" size={12} />
-                            )}
-                          </p>
-                          <div className="h-0.5 w-full -translate-y-2/4 bg-gray-500 mt-1"></div>
-                        </>
+                        <p
+                          key={subtopic.title}
+                          onClick={() =>
+                            handleSelect(topic.title, subtopic.title)
+                          }
+                          className="flex py-1 text-base items-center font-extralight text-white cursor-pointer"
+                          role="menuitem"
+                        >
+                          {subtopic.title}
+                          {subtopic.done && (
+                            <FaCheck className="ml-2" size={12} />
+                          )}
+                        </p>
                       ))}
                     </div>
                   </div>
@@ -779,93 +605,83 @@ const ContentPreCourses = () => {
             </div>
           ))}
         </div>
-        <p
-          className="text-center mt-3 mx-4 flex flex-row items-center text-base font-bold  text-white cursor-pointer"
-          onClick={redirectExam}
-        >
-          {" "}
-          {mainTopic} Quiz
-          {pass === true ? <FaCheck className="ml-2" size={12} /> : <></>}
-        </p>
       </>
     );
   };
 
   return (
     <>
+      <Headers />
       {!mainTopic ? null : (
-        <div className={`flex flex-col h-screen  text-white lg:mt-0 md:mt-0  bg-black ${isSidebarOpen ? "mt-0" : "mt-8"}`}>
-          <div className="flex flex-row overflow-y-auto  ">
-            <div
-              className={`${
-                isSidebarOpen ? "w-full" : "w-0"
-              } md:w-3/12 bg-black overflow-y-auto transition-all duration-300 relative`}
+        <div className="flex flex-col h-screen  ">
+          import {motion} from "framer-motion";
+          {isAnimationVisible && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{
+                duration: 1,
+                ease: [0.6, -0.05, 0.01, 0.99],
+              }}
+              className="fixed bottom-36 right-10 z-50"
             >
+              <div className="relative bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-xl shadow-lg w-48 font-poppins border-2">
+                <p className="text-center text-sm font-light leading-relaxed">
+                  Hi, I am your AI teacher. <br />
+                  You can ask me any doubts you have on this course.
+                </p>
+
+                <div className="absolute -bottom-2 right-6 h-5 w-5 rotate-45 bg-gradient-to-r from-blue-500 to-blue-500"></div>
+              </div>
+            </motion.div>
+          )}
+          <div
+            onClick={() => setIsOpenDrawer(true)}
+            className="m-5 fixed bottom-8 right-6 z-40  w-32 h-16  text-white  flex justify-center items-center shadow-md "
+          >
+            <img src={AI} alt="Image" />
+          </div>
+          <div className="flex flex-row overflow-y-auto mt-12 ">
+            <div className={`w-3/12 bg-[#200098]  overflow-y-auto`}>
               <div className="mt-3">
                 {jsonData &&
                   renderTopicsAndSubtopics(jsonData[mainTopic.toLowerCase()])}
               </div>
             </div>
-            <div
-              className={`overflow-y-auto flex-grow flex-col ${
-                isSidebarOpen ? "hidden" : "w-full"
-              } md:w-9/12`}
-            >
-              <button
-                className="md:hidden block p-2 bg-teal-500 text-black fixed top-0 left-0 z-30 w-full"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              >
-                ☰ Open Sub Topics
-              </button>
-              <nav className="py-5 bg-gray-900 border-b border-gray-500 flex justify-between items-center flex-wrap">
-                <div className="ml-1  flex flex-col lg:w-1/2 md:w-1/2 w-4/5">
+            <div className="overflow-y-auto flex-grow flex-col w-9/12 ">
+              <nav className="py-5 bg-gradient-to-b from-[#110038] via-[#150243] to-[#150243] border-b border-white flex items-center">
+                <div className="ml-1  flex flex-col w-1/2">
                   <TruncatedText text={mainTopic} len={10} />
                   {isComplete ? (
                     <p
                       onClick={finish}
-                      className="mr-3 underline text-white font-normal mx-8 whit"
+                      className="mr-3 underline cursor-pointer text-white font-normal mx-8"
                     >
                       Download Certificate
                     </p>
                   ) : (
                     <span className="text-white">
-                      <p className="lg:w-3/4 md:w-3/4 w-full text-end mx-4 text-lg font-extralight">{`${percentage}%`}</p>
-                      <div className="lg:w-3/4 md:w-3/4 w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 mx-5">
+                      <p className="w-3/4 text-end mx-4 text-lg font-extralight">{`${percentage}%`}</p>
+                      <div class="w-3/4 bg-gray-200 rounded-full h-4 dark:bg-gray-700 mx-5">
                         <div
-                          className="bg-teal-500 h-4 rounded-full"
+                          class="bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] h-4 rounded-full"
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
-                      <p className="mx-6 mt-0.5 text-sm whitespace-nowrap">Completion status</p>
+                      <p className="mx-6 mt-0.5 text-sm">Completion status</p>
                     </span>
                   )}
                 </div>
-                <div className="flex flex-wrap gap-5 mr-5 mt-5 lg:ml-0 md:ml-0 ml-8">
-                  <div className="">
-                    <AiFillHome
-                      onClick={redirectcourse}
-                      size={30}
-                      color={"#31C48D"}
-                    />
-                  </div>
-               
-                  <div className="flex gap-2 items-center" onClick={htmlDownload}>
-                    <BiSolidFilePdf
-                      size={30}
-                      color={"#31C48D"}
-                    />
-                    <span className="lg:block md:block hidden"> Export Course as PDF</span>
-                  </div>
-                </div>
               </nav>
-              <div className="px-5 text-white bg-gray-900 pt-5 font-poppins font-extralight">
-                <p className="text-white font-normal text-sm">{selected}</p>
-                <div className="overflow-hidden mt-4 text-white text-sm pb-10 max-w-full">
+              <div className="px-5 text-white bg-gradient-to-b from-[#110038] via-[#150243] to-[#300080] pt-5 font-poppins font-extralight">
+                <p className="text-white font-normal text-lg">{selected}</p>
+                <div className="overflow-hidden mt-4 text-white text-base pb-10 max-w-full">
                   {type === "video & text course" ? (
                     <div>
                       <YouTube
                         key={media}
-                        className="mb-5 overflow-auto no-scrollbarss"
+                        className="mb-5"
                         videoId={media}
                         opts={opts}
                       />
@@ -901,7 +717,7 @@ const ContentPreCourses = () => {
               </div>
               <div
                 className="overflow-y-auto"
-                style={{ height: "calc(100% - 200px)" }}
+                style={{ height: "calc(100% - 250px)" }}
               >
                 {messages.map((msg, index) => (
                   <div
@@ -922,12 +738,13 @@ const ContentPreCourses = () => {
                   </div>
                 ))}
               </div>
-              <div className="mx-6 mt-2">
-                <input
+              <div className="mx-6">
+                <textarea
                   value={newMessage}
+                  rows={3}
                   placeholder="Ask Something..."
                   onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md outline-none py-5 text-center  "
+                  className="w-full border border-gray-300 rounded-md outline-none p-2 text-center align-middle "
                   type="text"
                 />
               </div>
@@ -941,14 +758,6 @@ const ContentPreCourses = () => {
                 </button>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col">
-            <ChatWidget
-              defaultMessage={defaultMessage}
-              defaultPrompt={defaultPrompt}
-              mainTopic={mainTopic}
-            />
-            <NotesWidget courseId={courseId} mainTopic={mainTopic} />
           </div>
         </div>
       )}

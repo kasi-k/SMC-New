@@ -542,7 +542,7 @@ const Content = () => {
   }
 
   const redirectcourse = () => {
-    navigate("/viewcourse");
+    navigate("/pregeneratecourses");
   };
 
   const renderTopicsAndSubtopics = (topics) => {
