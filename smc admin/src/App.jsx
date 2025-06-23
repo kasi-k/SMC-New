@@ -17,6 +17,7 @@ import AddCategoryManagement from "./pages/Pre-generated courses/category mangem
 import GeneratePreGeneratedCourse from "./pages/Pre-generated courses/pregeneratecourses/GeneratePreGeneratedCourses";
 import ListPreGenerateCourses from "./pages/Pre-generated courses/pregeneratecourses/ListPreGenerateCourses";
 import ContentPreCourses from "./pages/Pre-generated courses/pregeneratecourses/ContentPreCourses";
+import BulkUpload from "./components/BulkUpload";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -144,6 +145,7 @@ const App = () => {
                   />
                   <Route path="/addpackage" element={<AddPackage />} />
                   <Route path="/editpackage" element={<EditPackage />} />
+                  <Route path="/bulkupload" element={<BulkUpload/>}/>
                 </>
               )}
               {memoizedFeatures["courses"] && (

@@ -8,6 +8,7 @@ import axios from "axios";
 import { API } from "../../Host";
 import { FiPlus } from "react-icons/fi";
 import { AiOutlineLoading } from "react-icons/ai";
+import BulkUpload from "../../components/BulkUpload";
 
 const schema = yup.object().shape({
 packagename: yup
@@ -17,9 +18,13 @@ packagename: yup
 
   email: yup.string().email().required("Email is required"),
 });
+
+const usersample =`Package name,User Email Id
+Pro ,user@gmail.com`
 const AdduserPackage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [userPackage, setUserPackage] = useState([]);
+  const [bulkupload, setBulkUpload] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const navigate = useNavigate();
 
@@ -84,11 +89,13 @@ const AdduserPackage = () => {
     setSelectedPackage(selectedPackage);
   };
   return (
+
     <>
+   {bulkupload ===false &&
       <div className="mx-6 my-4 font-poppins h-full">
         <div className="flex justify-between items-center">
           <p className="mb-2 mx-2 mt-4">Add a user to package</p>
-          <p className=" cursor-pointer flex  items-center gap-2 bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-4 py-1 rounded-md">
+          <p onClick={()=>setBulkUpload(true)} className=" cursor-pointer flex  items-center gap-2 bg-gradient-to-r from-[#3D03FA] to-[#A71CD2] px-4 py-1 rounded-md">
             <FiPlus />
             Bulk Upload Users
           </p>
@@ -161,6 +168,10 @@ const AdduserPackage = () => {
           </div>
         </form>
       </div>
+}
+{bulkupload ===true &&
+<BulkUpload onClose={()=>setBulkUpload(false)} title="Users to Packages" sampleData={usersample} filename="UserPackage Sample"/>
+}
     </>
   );
 };

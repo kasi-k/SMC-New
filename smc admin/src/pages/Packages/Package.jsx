@@ -69,14 +69,14 @@ const Package = ({ permissions }) => {
       </div>
       <hr />
       <div className="h-11/12 overflow-auto no-scrollbar ">
-      <div className=" grid  gap-4 my-6 mx-6  lg:grid-cols-9 md:grid-cols-6 ">
+      <div className=" grid  gap-2 my-6 mx-6  lg:grid-cols-9 md:grid-cols-6 ">
         {data &&
           data.map((plan, index) => (
             <div
               className="col-span-3 bg-darkest-blue rounded-lg p-4 shadow-lg"
               key={index}
             >
-              <div className="flex justify-end items-center gap-3 px-4 ">
+              <div className="flex justify-end items-center gap-3 ">
                 {hasEditPermission && (
                   <p
                     onClick={() =>
@@ -112,24 +112,32 @@ const Package = ({ permissions }) => {
                   ₹{plan.inr} / {plan.duration}
                 </p>
               </div>
-              <div className=" text-sm px-6 py-4 space-y-1">
+              <div className=" text-sm text-gray-300  py-4 space-y-1">
                 <p className=" capitalize">package id: {plan._id}</p>
                 <p className="capitalize text-nowrap">
                   No Of Courses:  {plan.course}{" "}
                 </p>
                 <p> No of subtopics: {plan.subtopic} </p>
                 <p> Tax: {plan.subtopic} %Gst </p>
+                <p> Razor Pay Id: 6879456123012  </p>
+                <p> No Of Users: 1000 </p>
+                <p> Courses Generated: 34445787848748 </p>
 
-                <div className="py-4 space-y-1">
-                  Features
-                  <p>Theory & Image course</p>
-                  {plan.coursetype !== "Video & Text Course" && (
-                    <p className="opacity-0">Video Course not available.</p>
+                <div className="  pt-4 ">
+                  <p className="font-extrabold">Features</p>
+                  <p className="">Theory & Image course</p>
+           
+                  {plan.coursetype === "Theory & Image course" && (
+                    <p>Theory & Image course </p>
                   )}
                   {plan.coursetype === "Video & Text Course" && (
                     <p>Theory & Video Course </p>
                   )}
+                     <p> Study Groups  </p>
+                <p>Pre-Generated Courses</p>
+                <p> Quiz</p>
                 </div>
+                
               </div>
             </div>
           ))}
