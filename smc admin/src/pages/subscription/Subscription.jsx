@@ -3,16 +3,18 @@ import Pdf from "../../assets/pdf.png";
 import Csv from "../../assets/csv.png";
 import Excel from "../../assets/excel.png";
 import { FaEye } from "react-icons/fa6";
-import Invoice from "./Invoice";
+import Invoice from "./ViewInvoice";
 import axios from "axios";
 import { API } from "../../Host";
 import { formatDate2 } from "../../Host";
-import * as XLSX from "xlsx"; // For Excel export
-import { CSVLink } from "react-csv"; // For CSV export
+import * as XLSX from "xlsx"; 
+import { CSVLink } from "react-csv"; 
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { useNavigate } from "react-router-dom";
 
 const Subscription = ({ permissions }) => {
+  const navigate = useNavigate();
   const hasViewPermission = permissions?.includes("view");
   const [invoiceModal, setInvoiceModal] = useState(false);
   const [invoiceId, setInvoiceId] = useState({});
@@ -116,10 +118,7 @@ const Subscription = ({ permissions }) => {
 
     doc.save("SMC_Subscription.pdf");
   };
-  const handleInvoiceModal = (dataId) => {
-    setInvoiceId(`${API}/api/getsubonid/${dataId}`);
-    setInvoiceModal(true);
-  };
+
   return (
     <>
       <div className=" font-poppins h-full">
@@ -224,7 +223,9 @@ const Subscription = ({ permissions }) => {
                     <td className=" p-1 border-b border-r border-slate-100 flex  justify-center items-center  ">
                       {hasViewPermission && (
                         <p
-                          onClick={() => handleInvoiceModal(data._id)}
+                          onClick={() =>  navigate("/viewinvoice",{state:{
+                            subId:data._id
+                          }})}
                           className=" cursor-pointer p-2  text-green-600 "
                         >
                           <FaEye size={24} />
@@ -237,12 +238,7 @@ const Subscription = ({ permissions }) => {
           </table>
         </div>
       </div>
-      {invoiceModal && (
-        <Invoice
-          onClose={() => setInvoiceModal()}
-          invoiceData={invoiceId} 
-        />
-      )}
+    
     </>
   );
 };

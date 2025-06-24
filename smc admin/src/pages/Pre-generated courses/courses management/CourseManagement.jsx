@@ -169,7 +169,7 @@ const CourseManagement = () => {
                 key={index}
               >
                 <img
-                  src={Image}
+                  src={precourse.photo || photo}
                   alt="Course"
                   className=" col-span-6 h-full w-full rounded-2xl  "
                 />

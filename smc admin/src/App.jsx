@@ -19,6 +19,7 @@ import ListPreGenerateCourses from "./pages/Pre-generated courses/pregeneratecou
 import ContentPreCourses from "./pages/Pre-generated courses/pregeneratecourses/ContentPreCourses";
 import BulkUpload from "./components/BulkUpload";
 import Exam from "./pages/Pre-generated courses/pregeneratecourses/Exam";
+import ViewInvoice from "./pages/subscription/ViewInvoice";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -170,6 +171,7 @@ const App = () => {
                       />
                     }
                   />
+                  <Route path="/viewinvoice"element={<ViewInvoice/>}/>
                 </>
               )}
               {memoizedFeatures["users"] && (

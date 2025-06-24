@@ -647,7 +647,7 @@ const ContentPreCourses = () => {
           >
             <img src={AI} alt="Image" />
           </div>
-          <div className="flex flex-row overflow-y-auto mt-12 ">
+          <div className="flex flex-row overflow-y-auto mt-8">
             <div className={`w-3/12 bg-[#200098]  overflow-y-auto`}>
               <div className="mt-3">
                 {jsonData &&
