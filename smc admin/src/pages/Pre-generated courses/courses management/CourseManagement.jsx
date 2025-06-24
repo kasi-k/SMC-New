@@ -78,7 +78,7 @@ const CourseManagement = () => {
     if (completed) {
       ending = end;
     }
-    navigate("/contentpregeneratequiz", {
+    navigate("/contentpregenerate", {
       state: {
         jsonData: jsonData,
         mainTopic: mainTopic.toUpperCase(),
