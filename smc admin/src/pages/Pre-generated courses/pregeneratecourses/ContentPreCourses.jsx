@@ -542,7 +542,7 @@ const ContentPreCourses = () => {
   }
 
   const redirectcourse = () => {
-    navigate("/viewcourse");
+    navigate("/coursemanagement");
   };
 
   const renderTopicsAndSubtopics = (topics) => {
@@ -604,6 +604,11 @@ const ContentPreCourses = () => {
               </div>
             </div>
           ))}
+         
+        </div>
+        <div className="text-white mx-6 mt-4 text-xl space-y-2">
+          <p className="font-semibold ">{mainTopic}</p>
+          <p onClick={()=>navigate("/quiz",  {state: {  courseId: courseId }})}className=" cursor-pointer font-medium ">Quiz</p>
         </div>
       </>
     );

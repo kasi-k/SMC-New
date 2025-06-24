@@ -77,7 +77,7 @@ const ListPreGenerateCourses = () => {
       try {
         const generatedText = res.data.url;
         sendData(generatedText, parsedJson);
-        setProcessing(false);
+        //setProcessing(false);
       } catch (error) {
         sendImage(parsedJson, promptImage);
       }
@@ -108,11 +108,14 @@ const ListPreGenerateCourses = () => {
       mainTopic,
       lang,
       category,
-       subCategory1,
-    subCategory2,
+      subCategory1,
+      subCategory2,
     });
 
     if (response.data.success) {
+    
+      setProcessing(false)
+
       toast.success(response.data.message);
       localStorage.setItem("courseId", response.data.courseId);
       localStorage.setItem("first", response.data.completed);
@@ -126,10 +129,28 @@ const ListPreGenerateCourses = () => {
           end: "",
           lang,
           category,
-      subCategory1,
-    subCategory2,
+          subCategory1,
+          subCategory2,
         },
       });
+        const courseId = response.data.courseId;
+      const mainTopicQuiz = jsonData[mainTopic.toLowerCase()];
+      let subString = "";
+      mainTopicQuiz.map((topicTemp) => {
+        let titleofSubtopic = topicTemp.title;
+        subString = subString + "," + titleofSubtopic;
+      });
+
+      console.log(subString);
+      
+
+      const responseQuiz = await axios.post(`${API}/api/generatequiz`, {
+        courseId,
+        mainTopic,
+        subString,
+        lang,
+      });
+      console.log(responseQuiz);
     } else {
       sendData(image, theory);
     }
@@ -156,29 +177,51 @@ const ListPreGenerateCourses = () => {
       type,
       mainTopic,
       category,
-     subCategory1,
-    subCategory2,
+      subCategory1,
+      subCategory2,
       lang,
     });
 
     if (response.data.success) {
+ 
+
       toast.success(response.data.message);
+
       localStorage.setItem("courseId", response.data.courseId);
       localStorage.setItem("first", response.data.completed);
       localStorage.setItem("jsonData", JSON.stringify(jsonData));
-      navigate("/contentpregenerate", {
-        state: {
-          jsonData: jsonData,
-          mainTopic: mainTopic.toUpperCase(),
-          type: type.toLowerCase(),
-          courseId: response.data.courseId,
-          end: "",
-          lang,
-          category,
-         subCategory1,
-    subCategory2,
-        },
+   setProcessing(false)
+        navigate("/contentpregenerate", {
+          state: {
+            jsonData: jsonData,
+            mainTopic: mainTopic.toUpperCase(),
+            type: type.toLowerCase(),
+            courseId: response.data.courseId,
+            end: "",
+            lang,
+            category,
+           subCategory1,
+      subCategory2,
+          },
+        });
+             const courseId = response.data.courseId;
+      const mainTopicQuiz = jsonData[mainTopic.toLowerCase()];
+      let subString = "";
+      mainTopicQuiz.map((topicTemp) => {
+        let titleofSubtopic = topicTemp.title;
+        subString = subString + "," + titleofSubtopic;
       });
+
+      console.log(subString);
+   
+
+      const responseQuiz = await axios.post(`${API}/api/generatequiz`, {
+        courseId,
+        mainTopic,
+        subString,
+        lang,
+      });
+      console.log(responseQuiz);
     } else {
       sendDataVideo(image, theory);
     }
@@ -239,7 +282,7 @@ const ListPreGenerateCourses = () => {
 
       try {
         const parsedJson = htmlContent;
-        setProcessing(false);
+        //setProcessing(false);
         sendDataVideo(url, parsedJson);
       } catch (error) {
         sendSummery(prompt, url);
