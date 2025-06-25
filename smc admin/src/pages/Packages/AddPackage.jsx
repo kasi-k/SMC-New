@@ -10,9 +10,8 @@ import { API } from "../../Host";
 import { toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
 
-// Validation schema with added fields for yes/no questions
 const schema = yup.object().shape({
-  razorpay: yup.string().trim().required("Razorpay ID is required"),
+  paymentId: yup.string().trim().required("Razorpay ID is required"),
   packagename: yup.string().trim().required("Package name is required"),
   duration: yup.string().trim().required("Plan Duration is required"),
   inr: yup.number().required("Price in INR required"),
@@ -29,11 +28,11 @@ const schema = yup.object().shape({
       "Please select a valid course type"
     )
     .required("Please select the course type"),
-  preGenerated: yup
+  preCourses: yup
     .string()
     .oneOf(["Yes", "No"], "Please select Yes or No for Pre-Generated Courses")
     .required("Pre-Generated Courses selection is required"),
-  studyGroup: yup
+  studyGroupAccess: yup
     .string()
     .oneOf(["Yes", "No"], "Please select Yes or No for Study Group")
     .required("Study Group selection is required"),
@@ -154,8 +153,8 @@ const AddPackage = () => {
 
   const watchSubtopic = watch("subtopic");
   const watchCourseType = watch("coursetype");
-  const watchPreGenerated = watch("preGenerated");
-  const watchStudyGroup = watch("studyGroup");
+  const watchPreGenerated = watch("preCourses");
+  const watchStudyGroup = watch("studyGroupAccess");
   const watchQuizAccess = watch("quizAccess");
 
   useEffect(() => {
@@ -180,6 +179,8 @@ const AddPackage = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
+    
     setIsSaving(true);
     const formData = {
       ...data,
@@ -257,9 +258,8 @@ const AddPackage = () => {
             <InputField
               label="Razorpay ID"
               register={register}
-              name="razorpay"
+              name="paymentId"
               placeholder="Enter Razorpay ID"
-              defaultValue="N/A"
               error={errors.razorpay?.message}
             />
           </div>
@@ -295,23 +295,23 @@ const AddPackage = () => {
             <RadioButtonGroup
               label="Pre-Generated Courses"
               register={register}
-              name="preGenerated"
+              name="preCourses"
               options={[
                 { value: "Yes", label: "Yes" },
                 { value: "No", label: "No" },
               ]}
-              error={errors.preGenerated?.message}
+              error={errors.preCourses?.message}
               watchValue={watchPreGenerated}
             />
             <RadioButtonGroup
               label="Study Group"
               register={register}
-              name="studyGroup"
+              name="studyGroupAccess"
               options={[
                 { value: "Yes", label: "Yes" },
                 { value: "No", label: "No" },
               ]}
-              error={errors.studyGroup?.message}
+              error={errors.studyGroupAccess?.message}
               watchValue={watchStudyGroup}
             />
             <RadioButtonGroup

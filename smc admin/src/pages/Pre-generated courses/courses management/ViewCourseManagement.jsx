@@ -1,8 +1,11 @@
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaginationBar from "../../../components/PaginationBar";
 import Image from "../../../assets/Courses.jpeg";
 import TableCourseManagement from "./TableCourseMangement";
+import axios from "axios";
+import { API, formatDate } from "../../../Host";
+import { useLocation } from "react-router-dom";
 
 const ViewCourseManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,7 +13,31 @@ const ViewCourseManagement = () => {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [currentItems, setCurrentItems] = useState([]);
+  const [currentItems, setCurrentItems] = useState({});
+  const location = useLocation();
+  const courseId = location?.state?.courseId
+  console.log(courseId);
+  
+
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`${API}/api/getprecourseId?courseId=${courseId}`);
+        console.log(response);
+        
+        const responseData = response.data.data;
+        console.log(responseData,"curr");
+        
+
+        setCurrentItems(responseData);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -21,49 +48,55 @@ const ViewCourseManagement = () => {
     <>
       <div className="mx-2 mt-6 font-poppins h-full">
         <div className=" mx-2   gap-4  ">
-          <div className=" grid grid-cols-12  p-4 text-white rounded-2xl bg-darkest-blue ">
-            <img
-              src={Image}
-              alt="Course"
-              className=" col-span-3 h-full w-full rounded-2xl  "
-            />
-            <div className=" col-span-8 text-xs font-extralight px-4 leading-relaxed">
-              <p>
-                <span>Date:</span>12-JUN-2025
-              </p>
-              <p>CCNA Security For Starters</p>
+          {currentItems &&
+         
+              <div className=" grid grid-cols-12  p-4 text-white rounded-2xl bg-darkest-blue ">
+                <img
+                  src={currentItems.photo}
+                  alt="Course"
+                  className=" col-span-3 h-full w-full rounded-2xl  "
+                />
+                <div className=" col-span-6 text-xs font-extralight px-4 leading-relaxed">
+                  <p>
+                    <span>Date:</span>
+                    {formatDate(currentItems.createdAt)}
+                  </p>
+                  <p className="capitalize">{currentItems.mainTopic}</p>
 
-              <p>
-                <span>Type:</span>Video & Theory Course
-              </p>
-              <p>
-                <span>No Of subtopic:</span> 05
-              </p>
-              <p>
-                <span>Language:</span> English
-              </p>
-              <p>
-                <span>Category:</span> Technology
-              </p>
-              <p>
-                <span>Sub Category 1:</span> Technology
-              </p>
-              <p>
-                <span>Sub Category 2:</span> Technology
-              </p>
-              <p>
-                <span>Accessed Count:</span> 10
-              </p>
-              <p>
-                <span>Completed Count:</span> 25
-              </p>
-            </div>
-            <div className="flex  justify-center  items-center col-span-7 ">
-              <p className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-sm text-sm">
-                View
-              </p>
-            </div>
-          </div>
+                  <p>
+                    <span>Type:</span>
+                    {currentItems.type}
+                  </p>
+                  <p>
+                    <span>No Of subtopic:</span> 05
+                  </p>
+                  <p>
+                    <span>Language:</span> {currentItems.lang}
+                  </p>
+                  <p>
+                    <span>Category:</span> {currentItems.category}
+                  </p>
+                  <p>
+                    <span>Sub Category 1:</span>
+                    {currentItems.subCategory1}
+                  </p>
+                  <p>
+                    <span>Sub Category 2:</span> {currentItems.subCategory2}
+                  </p>
+                  <p>
+                    {/* <span>Accessed Count:</span> {currentItems.user.length} */}
+                  </p>
+                  <p>
+                    <span>Completed Count:</span> 25
+                  </p>
+                </div>
+                <div className="flex  justify-center  items-center col-span-7 ">
+                  <p className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-sm text-sm">
+                    View
+                  </p>
+                </div>
+              </div>
+            }
         </div>
         <div className="flex items-center gap-2">
           <p className="py-2 flex items-center  ">
@@ -93,10 +126,8 @@ const ViewCourseManagement = () => {
             <option value="c">C</option>
           </select>
         </div>
-        <TableCourseManagement/>
+        <TableCourseManagement />
       </div>
-
- 
     </>
   );
 };

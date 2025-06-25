@@ -70,21 +70,16 @@ const CourseManagement = () => {
     }
   };
     const handleCourse = (content, mainTopic, type, courseId, completed, end) => {
-    const jsonData = JSON.parse(content);
+
     localStorage.setItem("courseId", courseId);
     localStorage.setItem("first", completed);
-    localStorage.setItem("jsonData", JSON.stringify(jsonData));
-    let ending = "";
-    if (completed) {
-      ending = end;
-    }
-    navigate("/contentpregenerate", {
+ 
+    navigate("viewcoursemanagement", {
       state: {
-        jsonData: jsonData,
-        mainTopic: mainTopic.toUpperCase(),
-        type: type.toLowerCase(),
+     
+ 
         courseId: courseId,
-        end: ending,
+     
       },
     });
   };
@@ -201,7 +196,7 @@ const CourseManagement = () => {
                     <span>Sub Category 2:</span> {precourse.subCategory2}
                   </p>
                   <p>
-                    <span>Accessed Count:</span> 10
+                    <span>Accessed Count:</span> {precourse.user.length}
                   </p>
                   <p>
                     <span>Completed Count:</span> 25
