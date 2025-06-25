@@ -1,36 +1,32 @@
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMemo } from "react";
-import TableCourseManagement from "./TableCourseMangement";
 import axios from "axios";
 import { API, formatDate } from "../../../Host";
 import { useLocation, useNavigate } from "react-router-dom";
+import TableQuizManagement from "./TableQuizManagement";
 
-const ViewCourseManagement = () => {
+const ViewQuiz = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentItems, setCurrentItems] = useState({});
   const [userData, setUserData] = useState([]);
-  const [selectedUserType, setSelectedUserType] = useState("");
   const location = useLocation();
   const courseId = location?.state?.courseId;
+  const [options, setOptions] = useState([]);
 
   const filteredUserData = useMemo(() => {
+    if (!searchQuery.trim()) return userData;
     const query = searchQuery.trim().toLowerCase();
     return userData.filter((user) => {
       const email = user.userId?.email?.toLowerCase() || "";
       const fname = user.userId?.fname?.toLowerCase() || "";
       const id = user.userId?._id?.toLowerCase() || "";
-      const userType = user.userId?.type || "";
-      const matchesSearch =
-        !query ||
-        email.includes(query) ||
-        fname.includes(query) ||
-        id.includes(query);
-      const matchesType = !selectedUserType || userType === selectedUserType;
-      return matchesSearch && matchesType;
+      return (
+        email.includes(query) || fname.includes(query) || id.includes(query)
+      );
     });
-  }, [searchQuery, userData, selectedUserType]);
+  }, [searchQuery, userData]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -48,6 +44,26 @@ const ViewCourseManagement = () => {
 
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    fetchUserType();
+  }, []);
+
+  const fetchUserType = async () => {
+    try {
+      const response = await axios.get(
+        `${API}/api/getsubscriptionplanpackages`
+      );
+
+      if (Array.isArray(response.data.data)) {
+        setOptions(response.data.data);
+      } else {
+        setOptions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching taxes:", error);
+    }
+  };
 
   const handleCourse = (content, mainTopic, type, courseId, completed, end) => {
     const jsonData = JSON.parse(content);
@@ -88,15 +104,12 @@ const ViewCourseManagement = () => {
                 <p className="capitalize">{currentItems.mainTopic}</p>
 
                 <p>
-                  <span>Type:</span>
-                  {currentItems.type}
-                </p>
-                <p>
-                  <span>No Of subtopic:</span> 05
-                </p>
-                <p>
                   <span>Language:</span> {currentItems.lang}
                 </p>
+                <p>
+                  <span>No Of Questions:</span> 10
+                </p>
+
                 <p>
                   <span>Category:</span> {currentItems.category}
                 </p>
@@ -134,9 +147,9 @@ const ViewCourseManagement = () => {
             </div>
           )}
         </div>
-                {filteredUserData.length === 0 ? (
+                  {filteredUserData.length === 0 ? (
     <div className="text-center text-red-500 font-semibold py-8">
-      No users for this course
+      No users attend the Quizzes for this course
     </div>
   ) : (
     <>
@@ -156,8 +169,7 @@ const ViewCourseManagement = () => {
             </button>
           </p>
           <select
-            value={selectedUserType}
-            onChange={(e) => setSelectedUserType(e.target.value)}
+            defaultValue=""
             className="text-white placeholder:text-white rounded-full px-4 py-2 bg-darkest-blue outline-none"
           >
             <option value="" disabled>
@@ -171,12 +183,13 @@ const ViewCourseManagement = () => {
           </select>
         </div>
 
-    <TableCourseManagement userData={filteredUserData} />
+    <TableQuizManagement userData={filteredUserData} />
     </>
   )}
+    
       </div>
     </>
   );
 };
 
-export default ViewCourseManagement;
+export default ViewQuiz;

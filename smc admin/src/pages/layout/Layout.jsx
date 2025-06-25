@@ -79,8 +79,9 @@ const Layout = ({ permissions }) => {
       submenu1: true,
       submenuItems1: [
         {
-          title: "My Study Groups",
-          to: "#",
+          title: "Quizzes",
+          icon: <TbBulb size={20} />,
+          to: "/quizmanagement",
         },
       ].filter(Boolean),
     },
@@ -180,102 +181,117 @@ const Layout = ({ permissions }) => {
 
           <div className="my-1 ">
             <ul className="pt-2">
-           {Menus.map((menu, index) => {
+              {Menus.map((menu, index) => {
+                const isActive =
+                  location.pathname === menu.to ||
+                  (menu.submenu &&
+                    menu.submenuItems?.some(
+                      (item) => location.pathname === item.to
+                    )) ||
+                  (menu.submenu1 &&
+                    menu.submenuItems1?.some(
+                      (item) => location.pathname === item.to
+                    ));
 
-  const isActive =
-    location.pathname === menu.to ||
-    (menu.submenu &&
-      menu.submenuItems?.some((item) => location.pathname === item.to)) ||
-    (menu.submenu1 &&
-      menu.submenuItems1?.some((item) => location.pathname === item.to));
-
-  return (
-    <React.Fragment key={index}>
-      <NavLink to={menu.to} onClick={menu.onClick}>
-        <li
-          className={`cursor-pointer flex items-center gap-x-3 p-1.5 mt-1 pl-3 transition-all duration-700 hover:bg-gradient-to-r from-[#110038] to-[#08006B] font-extralight
-            ${isActive ? "bg-gradient-to-r from-[#110038] to-[#08006B] font-medium text-white" : ""}
+                return (
+                  <React.Fragment key={index}>
+                    <NavLink to={menu.to} onClick={menu.onClick}>
+                      <li
+                        className={`cursor-pointer flex items-center gap-x-3 p-1.5 mt-1 pl-3 transition-all duration-700 hover:bg-gradient-to-r from-[#110038] to-[#08006B] font-extralight
+            ${
+              isActive
+                ? "bg-gradient-to-r from-[#110038] to-[#08006B] font-medium text-white"
+                : ""
+            }
           `}
-        >
-          <div className="flex items-center gap-x-2 ">
-            <span className="px-1 py-1 rounded-lg text-white ">
-              {menu.icon}
-            </span>
-            <span className="font-extralight duration-300">
-              {menu.title}
-            </span>
-          </div>
-          {menu.submenu && (
-            <BsChevronDown
-              className={`cursor-pointer transition-transform delay-100 ${openMenuIndex === index ? "rotate-180" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                setOpenMenuIndex(openMenuIndex === index ? null : index);
-              }}
-            />
-          )}
-          {menu.submenu1 && (
-            <BsChevronDown
-              className={`cursor-pointer transition-transform delay-100 ${openMenuIndex === index ? "rotate-180" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                setOpenMenuIndex(openMenuIndex === index ? null : index);
-              }}
-            />
-          )}
-        </li>
-      </NavLink>
-      {menu.submenu && openMenuIndex === index && (
-        <ul>
-          {menu.submenuItems.map((submenuitem, subIndex) => (
-            <NavLink
-              to={submenuitem.to}
-              onClick={submenuitem.onClick}
-              key={subIndex}
-            >
-              <li
-                className={`cursor-pointer font-extralight flex items-center gap-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
-                  location.pathname === submenuitem.to
-                    ? "bg-[#A71CD2]"
-                    : "text-gray-200 font-extralight"
-                }`}
-              >
-                <span className="px-1 py-1 rounded-lg text-white">
-                  {submenuitem.icon}
-                </span>
-                <span>{submenuitem.title}</span>
-              </li>
-            </NavLink>
-          ))}
-        </ul>
-      )}
-      {menu.submenu1 && openMenuIndex === index && (
-        <ul>
-          {menu.submenuItems1.map((submenuitem, subIndex) => (
-            <NavLink
-              to={submenuitem.to}
-              onClick={submenuitem.onClick}
-              key={subIndex}
-            >
-              <li
-                className={`cursor-pointer font-extralight flex items-center gap-x-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
-                  location.pathname === submenuitem.to
-                    ? "bg-[#A71CD2]"
-                    : "text-gray-200 font-extralight"
-                }`}
-              >
-                <span className="px-1 py-1 rounded-lg text-white">
-                  {submenuitem.icon}
-                </span>
-                <span>{submenuitem.title}</span>
-              </li>
-            </NavLink>
-          ))}
-        </ul>
-      )}
-    </React.Fragment>
-  );
-})}
+                      >
+                        <div className="flex items-center gap-x-2 ">
+                          <span className="px-1 py-1 rounded-lg text-white ">
+                            {menu.icon}
+                          </span>
+                          <span className="font-extralight duration-300">
+                            {menu.title}
+                          </span>
+                        </div>
+                        {menu.submenu && (
+                          <BsChevronDown
+                            className={`cursor-pointer transition-transform delay-100 ${
+                              openMenuIndex === index ? "rotate-180" : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setOpenMenuIndex(
+                                openMenuIndex === index ? null : index
+                              );
+                            }}
+                          />
+                        )}
+                        {menu.submenu1 && (
+                          <BsChevronDown
+                            className={`cursor-pointer transition-transform delay-100 ${
+                              openMenuIndex === index ? "rotate-180" : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setOpenMenuIndex(
+                                openMenuIndex === index ? null : index
+                              );
+                            }}
+                          />
+                        )}
+                      </li>
+                    </NavLink>
+                    {menu.submenu && openMenuIndex === index && (
+                      <ul>
+                        {menu.submenuItems.map((submenuitem, subIndex) => (
+                          <NavLink
+                            to={submenuitem.to}
+                            onClick={submenuitem.onClick}
+                            key={subIndex}
+                          >
+                            <li
+                              className={`cursor-pointer font-extralight flex items-center gap-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
+                                location.pathname === submenuitem.to
+                                  ? "bg-[#A71CD2]"
+                                  : "text-gray-200 font-extralight"
+                              }`}
+                            >
+                              <span className="px-1 py-1 rounded-lg text-white">
+                                {submenuitem.icon}
+                              </span>
+                              <span>{submenuitem.title}</span>
+                            </li>
+                          </NavLink>
+                        ))}
+                      </ul>
+                    )}
+                    {menu.submenu1 && openMenuIndex === index && (
+                      <ul>
+                        {menu.submenuItems1.map((submenuitem, subIndex) => (
+                          <NavLink
+                            to={submenuitem.to}
+                            onClick={submenuitem.onClick}
+                            key={subIndex}
+                          >
+                            <li
+                              className={`cursor-pointer font-extralight flex items-center gap-x-2 p-1 pl-8 hover:bg-gradient-to-r from-[#110038] to-[#08006B] ${
+                                location.pathname === submenuitem.to
+                                  ? "bg-[#A71CD2]"
+                                  : "text-gray-200 font-extralight"
+                              }`}
+                            >
+                              <span className="px-1 py-1 rounded-lg text-white">
+                                {submenuitem.icon}
+                              </span>
+                              <span>{submenuitem.title}</span>
+                            </li>
+                          </NavLink>
+                        ))}
+                      </ul>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -289,7 +305,6 @@ const Layout = ({ permissions }) => {
             <span>Morpheus Code</span>
           </div>
         </div>
-        
       </div>
       {isLogOutModalOpen && <LogOut handleCloseModal={handleCloseModal} />}
     </div>

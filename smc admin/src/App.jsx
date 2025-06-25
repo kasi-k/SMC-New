@@ -20,6 +20,8 @@ import ContentPreCourses from "./pages/Pre-generated courses/pregeneratecourses/
 import BulkUpload from "./components/BulkUpload";
 import Exam from "./pages/Pre-generated courses/pregeneratecourses/Exam";
 import ViewInvoice from "./pages/subscription/ViewInvoice";
+import Quizzes from "./pages/quiz management/Quizzes/Quizzes";
+import ViewQuiz from "./pages/quiz management/Quizzes/ViewQuiz";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -194,6 +196,8 @@ const App = () => {
               </Route>
               <Route path="/pregeneratecourses" element={<GeneratePreGeneratedCourse/>}/>
               <Route path="/listpregeneratecourses" element={<ListPreGenerateCourses/>}/>
+              <Route path="/quizmanagement" element={<Quizzes/>}/>
+              <Route path="/viewquiz" element={<ViewQuiz/>}/>
           
            
               {memoizedFeatures["team"] && (

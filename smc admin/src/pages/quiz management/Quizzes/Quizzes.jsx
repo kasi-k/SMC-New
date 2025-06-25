@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API, formatDate } from "../../../Host";
 
-const CourseManagement = () => {
+const Quizzes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
@@ -42,7 +42,14 @@ const CourseManagement = () => {
     };
 
     fetchCourses();
-  }, [currentPage, itemsPerPage, searchQuery,category, subcategory1, subcategory2]);
+  }, [
+    currentPage,
+    itemsPerPage,
+    searchQuery,
+    category,
+    subcategory1,
+    subcategory2,
+  ]);
 
   useEffect(() => {
     fetchOptions();
@@ -68,17 +75,13 @@ const CourseManagement = () => {
       setCurrentPage(pageNumber);
     }
   };
-    const handleCourse = (content, mainTopic, type, courseId, completed, end) => {
-
+  const handleCourse = (content, mainTopic, type, courseId, completed, end) => {
     localStorage.setItem("courseId", courseId);
     localStorage.setItem("first", completed);
- 
-    navigate("viewcoursemanagement", {
+
+    navigate("/viewquiz", {
       state: {
-     
- 
         courseId: courseId,
-     
       },
     });
   };
@@ -173,17 +176,14 @@ const CourseManagement = () => {
                     {formatDate(precourse.createdAt)}
                   </p>
                   <p className="capitalize">{precourse.mainTopic}</p>
-
-                  <p>
-                    <span>Type:</span>
-                    {precourse.type}
-                  </p>
-                  <p>
-                    <span>No Of subtopic:</span> 05
-                  </p>
                   <p>
                     <span>Language:</span> {precourse.lang}
                   </p>
+
+                  <p>
+                    <span>No Of Questions:</span> 10
+                  </p>
+
                   <p>
                     <span>Category:</span> {precourse.category}
                   </p>
@@ -201,20 +201,20 @@ const CourseManagement = () => {
                     <span>Completed Count:</span> 25
                   </p>
                 </div>
-                <div
-               
-                  className="flex mt-2  justify-end items-center col-span-8 -mx-2"
-                >
-                  <p onClick={() =>
-                            handleCourse(
-                              precourse.content,
-                              precourse.mainTopic,
-                              precourse.type,
-                              precourse._id,
-                              precourse.completed,
-                              precourse.end
-                            )
-                          } className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm">
+                <div className="flex mt-2  justify-end items-center col-span-8 -mx-2">
+                  <p
+                    onClick={() =>
+                      handleCourse(
+                        precourse.content,
+                        precourse.mainTopic,
+                        precourse.type,
+                        precourse._id,
+                        precourse.completed,
+                        precourse.end
+                      )
+                    }
+                    className=" cursor-pointer bg-teal-400 text-black px-7 py-1 rounded-md text-sm"
+                  >
                     View
                   </p>
                 </div>
@@ -238,4 +238,4 @@ const CourseManagement = () => {
   );
 };
 
-export default CourseManagement;
+export default Quizzes;

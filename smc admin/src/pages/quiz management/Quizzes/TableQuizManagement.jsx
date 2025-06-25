@@ -1,6 +1,6 @@
 import { formatDate } from "../../../Host";
 
-const TableCourseManagement = ({ userData }) => {
+const TableQuizManagement = ({ userData }) => {
   return (
     <>
       <div className=" font-poppins ">
@@ -17,7 +17,8 @@ const TableCourseManagement = ({ userData }) => {
                 </th>
                 <th className=" border border-slate-100">Email</th>
                 <th className="border border-slate-100">Phone Number</th>
-                <th className=" border border-slate-100">Course Status</th>
+                <th className=" border border-slate-100">Quiz Status</th>
+                <th className=" border border-slate-100">Quiz Marks</th>
                 <th className=" border border-slate-100">User Type</th>
                 {/* <th className=" border border-slate-100">Associated Entity</th> */}
                 <th className="border border-slate-100">Start Date</th>
@@ -49,7 +50,11 @@ const TableCourseManagement = ({ userData }) => {
                       {user.userId.phone}
                     </td>
                     <td className="border border-slate-100  capitalize">
-                      {user.completed === true ? "Completed" : "Not Completed"}
+                      {user.quizPassed === true ? "Completed" : "Not Completed"}
+                    </td>
+                    <td className="border border-slate-100 capitalize">
+                      {" "}
+                      {user.quizMarks ===""?"-":user.quizMarks}
                     </td>
                     <td className="border border-slate-100 capitalize">
                       {" "}
@@ -77,4 +82,4 @@ const TableCourseManagement = ({ userData }) => {
   );
 };
 
-export default TableCourseManagement;
+export default TableQuizManagement;
