@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -14,7 +12,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 
 // Validation schema (same as AddPackage)
 const schema = yup.object().shape({
-  razorpay: yup.string().trim().required("Razorpay ID is required"),
+  paymentId: yup.string().trim().required("Razorpay ID is required"),
   packagename: yup.string().trim().required("Package name is required"),
   duration: yup.string().trim().required("Plan Duration is required"),
   inr: yup.number().required("Price in INR required"),
@@ -31,11 +29,11 @@ const schema = yup.object().shape({
       "Please select a valid course type"
     )
     .required("Please select the course type"),
-  preGenerated: yup
+  preCourses: yup
     .string()
     .oneOf(["Yes", "No"], "Please select Yes or No for Pre-Generated Courses")
     .required("Pre-Generated Courses selection is required"),
-  studyGroup: yup
+  studyGroupAccess: yup
     .string()
     .oneOf(["Yes", "No"], "Please select Yes or No for Study Group")
     .required("Study Group selection is required"),
@@ -139,16 +137,14 @@ const RadioButtonGroup = ({
 );
 
 const EditPackage = () => {
-   const [Packages, setPackages] = useState([]);
+  const [Packages, setPackages] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const [optionsTax, setOptionsTax] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-   const location = useLocation();
-    const userId = location.state?.userId;
-    console.log(userId);
-    
-
+  const location = useLocation();
+  const userId = location.state?.userId;
+  console.log(userId);
 
   const {
     register,
@@ -163,8 +159,8 @@ const EditPackage = () => {
 
   const watchSubtopic = watch("subtopic");
   const watchCourseType = watch("coursetype");
-  const watchPreGenerated = watch("preGenerated");
-  const watchStudyGroup = watch("studyGroup");
+  const watchPreGenerated = watch("preCourses");
+  const watchStudyGroup = watch("studyGroupAccess");
   const watchQuizAccess = watch("quizAccess");
 
   useEffect(() => {
@@ -188,11 +184,16 @@ const EditPackage = () => {
 
   const fetchPackage = async () => {
     try {
-      const response = await axios.get(`${API}/api/subscriptionplan/${userId}`);
-        const responseData = response.data.plan;
+      const response = await axios.get(
+        `${API}/api/getsubscriptionplanbyid/${userId}`
+      );
+      console.log(response);
+
+      const responseData = response.data.plan;
       setPackages(responseData);
       const plan = response.data.plan;
       setValue("packagename", plan.packagename);
+      setValue("paymentId", plan.paymentId);
       setValue("duration", plan.duration);
       setValue("price", plan.price);
       setValue("inr", plan.inr);
@@ -200,7 +201,9 @@ const EditPackage = () => {
       setValue("tax", plan.tax);
       setValue("subtopic", plan.subtopic);
       setValue("coursetype", plan.coursetype);
-  
+      setValue("preCourses", plan.preCourses);
+      setValue("studyGroupAccess", plan.studyGroupAccess);
+      setValue("quizAccess", plan.quizAccess);
     } catch (error) {
       toast.error("Failed to load package data");
     } finally {
@@ -283,10 +286,9 @@ const EditPackage = () => {
             <InputField
               label="Razorpay ID"
               register={register}
-              name="razorpay"
+              name="paymentId"
               placeholder="Enter Razorpay ID"
-              defaultValue="N/A"
-              error={errors.razorpay?.message}
+              error={errors.paymentId?.message}
             />
           </div>
           <div className="grid grid-cols-5 gap-4 items-center">
@@ -321,23 +323,23 @@ const EditPackage = () => {
             <RadioButtonGroup
               label="Pre-Generated Courses"
               register={register}
-              name="preGenerated"
+              name="preCourses"
               options={[
                 { value: "Yes", label: "Yes" },
                 { value: "No", label: "No" },
               ]}
-              error={errors.preGenerated?.message}
+              error={errors.preCourses?.message}
               watchValue={watchPreGenerated}
             />
             <RadioButtonGroup
               label="Study Group"
               register={register}
-              name="studyGroup"
+              name="studyGroupAccess"
               options={[
                 { value: "Yes", label: "Yes" },
                 { value: "No", label: "No" },
               ]}
-              error={errors.studyGroup?.message}
+              error={errors.studyGroupAccess?.message}
               watchValue={watchStudyGroup}
             />
             <RadioButtonGroup

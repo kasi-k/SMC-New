@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Invoice from "../../assets/Invoice.png";
 import { toPng } from "html-to-image";
 import { AiOutlineLoading } from "react-icons/ai";
-import { API, formatDate1 } from "../../Host";
+import { API, formatDate, formatDate1, formatDate2 } from "../../Host";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -58,7 +58,7 @@ const ViewInvoice = () => {
     <div className="text-black p-4 h-full ">
       {invoice && (
         <div
-          className="bg-white w-1/3  p-2 space-y-2 shadow-lg"
+          className="bg-white w-1/2  h-full p-2 space-y-2 shadow-lg"
           ref={pdfRef}
         >
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3">
@@ -72,14 +72,22 @@ const ViewInvoice = () => {
           <p>
             Invoice No : <span>{invoice.recieptId}</span>
           </p>
-          <div className="text-xs text-gray-500 space-y-1">
+                <div className="text-xs space-y-1">
+       
+            <p>Bill To,</p>
+            <p>First Name ,Last Name</p>
+            <p>Address Line1,</p>
+            <p>Address Line2</p>
+            <p>City,State,Country,Pincode</p>
+          </div>
+          <div className="text-xs  space-y-1">
             <p>
               <span>Product</span>: <span>SeekMYCOURSE</span> Subscription
             </p>
             <p>Plan: {invoice.plan}</p>
             <p>Billing Type: {invoice.duration}</p>
-            <p>Purchase Date: {formatDate1(invoice.date)}</p>
-            <p>Plan Expiry Date: 31-Dec-2025</p>
+            <p>Purchase Date: {formatDate2(invoice.date)}</p>
+            <p>Plan Expiry Date: {formatDate2(invoice.date)}</p>
           </div>
 
           <div className="bg-gray-300 rounded-sm p-1.5 text-xs ">
@@ -102,46 +110,50 @@ const ViewInvoice = () => {
                 : `$${parseFloat(invoice.amount).toFixed(2)}`}
             </p>
           </div>
+          <div className="flex justify-end text-xs mt-6">
+            <div className=" ">
+              <p className="mx-2">Payment Summary</p>
+              <div className=" bg-gray-300  w-72  rounded-lg p-4  space-y-2 ">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>
+                    {invoice.method === "razorpay"
+                      ? `₹${parseFloat(invoice.amount).toFixed(2)}`
+                      : `$${parseFloat(invoice.amount).toFixed(2)}`}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tax (GST)</span>
+                  <span>
+                    {invoice.method === "razorpay"
+                      ? `₹${(
+                          parseFloat(invoice.amount) *
+                          (invoice.tax / 100)
+                        ).toFixed(2)}`
+                      : `$${(
+                          parseFloat(invoice.amount) *
+                          (invoice.tax / 100)
+                        ).toFixed(2)}`}
+                  </span>
+                </div>
+                <div className="flex justify-between font-semibold  pt-2">
+                  <span>TOTAL</span>
+                  <span>
+                    {(() => {
+                      const amount = parseFloat(invoice.amount);
+                      const tax = amount * (invoice.tax / 100);
+                      const grandTotal = amount + tax;
 
-          <p className="w-full  sm:w-96">Payment Summary</p>
-          <div className=" bg-gray-300 w-full sm:w-96  rounded-lg p-4 text-sm space-y-2 ">
-            <div className="flex justify-between ">
-              <span className="text-center">Subtotal</span>
-              <span>
-                {invoice.method === "razorpay"
-                  ? `₹${parseFloat(invoice.amount).toFixed(2)}`
-                  : `$${parseFloat(invoice.amount).toFixed(2)}`}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Tax (GST)</span>
-              <span>
-                {invoice.method === "razorpay"
-                  ? `₹${(
-                      parseFloat(invoice.amount) *
-                      (invoice.tax / 100)
-                    ).toFixed(2)}`
-                  : `$${(
-                      parseFloat(invoice.amount) *
-                      (invoice.tax / 100)
-                    ).toFixed(2)}`}
-              </span>
-            </div>
-            <div className="flex justify-between font-semibold text-sm border-t border-gray-600 pt-2">
-              <span>TOTAL</span>
-              <span>
-                {(() => {
-                  const amount = parseFloat(invoice.amount);
-                  const tax = amount * (invoice.tax / 100);
-                  const grandTotal = amount + tax;
-
-                  return invoice.method === "razorpay"
-                    ? `₹${grandTotal.toFixed(0)}.00`
-                    : `$${grandTotal.toFixed(0)}`;
-                })()}
-              </span>
+                      return invoice.method === "razorpay"
+                        ? `₹${grandTotal.toFixed(0)}.00`
+                        : `$${grandTotal.toFixed(0)}`;
+                    })()}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+          <p className="text-[8px] relative"><span className="absolute -bottom-20">Note:This is an electronically generated system invoice</span></p>
         </div>
       )}
 

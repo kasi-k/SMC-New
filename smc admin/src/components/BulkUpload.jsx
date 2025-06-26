@@ -7,9 +7,11 @@ const BulkUpload = ({
   onUpload,
   onClose,
   sampleData,
+  setFile,
+  file,
   filename,
 }) => {
-  const [file, setFile] = useState(null);
+
   const inputRef = useRef();
   const navigate = useNavigate();
 
