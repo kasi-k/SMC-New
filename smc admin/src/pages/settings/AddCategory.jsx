@@ -57,7 +57,7 @@ const AddCategory = ({ onClose, fetchCategory }) => {
             {...register("category")}
             type="text"
             placeholder=" Enter Category Name"
-            className="rounded-md w-4/5 py-1.5 px-1 text-black"
+            className="rounded-md w-4/5 bg-white py-1.5 px-1 text-black"
           />
           <p className="text-red-700">{errors.category?.message}</p>
           <div className="flex justify-center my-4 w-4/5">

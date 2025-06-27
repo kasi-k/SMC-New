@@ -129,7 +129,7 @@ const Taxes = () => {
               type="text"
               value={taxname}
               placeholder=" Enter Category Name"
-              className="rounded-md w-1/2 py-1.5 px-1 text-black"
+              className="rounded-md w-1/2 bg-white py-1.5 px-1 text-black"
               onChange={(e) => setTaxName(e.target.value)}
             />
             <p>Tax Percentage</p>
@@ -137,7 +137,7 @@ const Taxes = () => {
               type="text"
               value={percentage}
               placeholder=" Enter Category Name"
-              className="rounded-md w-1/2 py-1.5 px-1 text-black"
+              className="rounded-md w-1/2 bg-white py-1.5 px-1 text-black"
               onChange={(e) => setPercentage(e.target.value)}
             />
             <div >

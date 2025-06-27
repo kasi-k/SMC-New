@@ -160,7 +160,7 @@ const GenerateCourse = () => {
         </button>
       </div>
       <hr />
-      <div className="my-5 text-white font-poppins ">
+      <div className="my-5 text-white font-poppins h-full">
         <p className="text-center font-extralight">Generate Course</p>
         <form onSubmit={handleSubmit}>
           <div className=" grid grid-cols-12 gap-3 mx-10 mt-6">
@@ -176,7 +176,7 @@ const GenerateCourse = () => {
                   type="text"
                   placeholder="Enter Topic"
                   id="topic1"
-                  className="py-2 px-4  rounded-md  text-black shadow-md outline-none lg:w-3/4 md:w-full w-full"
+                  className="py-2 px-4  bg-white rounded-md  text-black shadow-md outline-none lg:w-3/4 md:w-full w-full"
                 />
               </div>
               <p className="text-sm font-extralight">
@@ -252,7 +252,7 @@ const GenerateCourse = () => {
                       name="sub"
                       value={element.sub}
                       onChange={(e) => handleChange(index, e)}
-                      className="py-2 px-4 rounded-md text-black shadow-md outline-none lg:w-3/4 md:w-full w-full my-1"
+                      className="py-2 px-4 rounded-md bg-white text-black shadow-md outline-none lg:w-3/4 md:w-full w-full my-1"
                       placeholder="Enter Subtopic"
                       type="text"
                     />

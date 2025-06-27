@@ -131,7 +131,7 @@ const Status = () => {
             type="text"
             value={editValue}
             placeholder=" Enter Status Name"
-            className=" lg:w-7/12 md:w-7/12 rounded-md py-1.5 px-3 text-black"
+            className=" lg:w-7/12 md:w-7/12  bg-white rounded-md py-1.5 px-3 text-black"
             onChange={(e) => setEditValue(e.target.value)}
           />
           <p>Select Color:</p>

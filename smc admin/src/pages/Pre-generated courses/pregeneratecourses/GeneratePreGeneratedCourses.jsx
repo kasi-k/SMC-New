@@ -10,6 +10,7 @@ import { API } from "../../../Host";
 import { toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
 
+
 const schema = yup.object().shape({
   category: yup.string().required("Category is required"),
   subCategory1: yup.string().required("Sub Category 1 is required"),
@@ -53,7 +54,7 @@ const InputField = ({
 );
 
 const SelectField = ({ label, register, name, options, error }) => (
-  <div className="grid gap-2">
+  <div className="grid gap-2  ">
     <label className="text-lg">
       {label} <span className="text-red-600">*</span>
     </label>
@@ -67,7 +68,7 @@ const SelectField = ({ label, register, name, options, error }) => (
           Select {label}
         </option>
         {options.map((option, index) => (
-          <option key={index} value={option.value}>
+          <option key={index} value={option.value}  >
             {option.label}
           </option>
         ))}
@@ -124,11 +125,54 @@ const RadioButtonGroup = ({
 );
 
 const GeneratePreGeneratedCourses = () => {
-  const [languages, setLanguages] = useState([
-    { value: "English", label: "English" },
-    { value: "Hindi", label: "Hindi" },
-    { value: "Tamil", label: "Tamil" },
-  ]);
+const languages = [
+  { value: "en", label: "English" },
+  { value: "ta", label: "Tamil" },
+  { value: "ml", label: "Malayalam" },
+  { value: "te", label: "Telugu" },
+  { value: "kn", label: "Kannada" },
+  { value: "mr", label: "Marathi" },
+  { value: "ur", label: "Urdu" },
+  { value: "gu", label: "Gujarati" },
+  { value: "ar", label: "Arabic" },
+  { value: "bn", label: "Bengali" },
+  { value: "bg", label: "Bulgarian" },
+  { value: "zh", label: "Chinese" },
+  { value: "hr", label: "Croatian" },
+  { value: "cs", label: "Czech" },
+  { value: "da", label: "Danish" },
+  { value: "nl", label: "Dutch" },
+  { value: "et", label: "Estonian" },
+  { value: "fi", label: "Finnish" },
+  { value: "fr", label: "French" },
+  { value: "de", label: "German" },
+  { value: "el", label: "Greek" },
+  { value: "he", label: "Hebrew" },
+  { value: "hi", label: "Hindi" },
+  { value: "hu", label: "Hungarian" },
+  { value: "id", label: "Indonesian" },
+  { value: "it", label: "Italian" },
+  { value: "ja", label: "Japanese" },
+  { value: "ko", label: "Korean" },
+  { value: "lv", label: "Latvian" },
+  { value: "lt", label: "Lithuanian" },
+  { value: "no", label: "Norwegian" },
+  { value: "pl", label: "Polish" },
+  { value: "pt", label: "Portuguese" },
+  { value: "ro", label: "Romanian" },
+  { value: "ru", label: "Russian" },
+  { value: "sr", label: "Serbian" },
+  { value: "sk", label: "Slovak" },
+  { value: "sl", label: "Slovenian" },
+  { value: "es", label: "Spanish" },
+  { value: "sw", label: "Swahili" },
+  { value: "sv", label: "Swedish" },
+  { value: "th", label: "Thai" },
+  { value: "tr", label: "Turkish" },
+  { value: "uk", label: "Ukrainian" },
+  { value: "vi", label: "Vietnamese" },
+  { value: "ks", label: "Kashmiri" }, // <-- Added Kashmiri
+];
 
   const [processing, setProcessing] = useState(false);
   const [options, setOptions] = useState([]);
@@ -173,7 +217,8 @@ const GeneratePreGeneratedCourses = () => {
   const onSubmit = async (data) => {
     setProcessing(true);
     const { topic, category, subCategory1, subCategory2, language } = data;
-    const prompt = `Strictly in ${language}, Generate a list of Strict ${
+const selectedLanguage = languages.find(l => l.value === language)?.label || language;
+    const prompt = `Strictly in ${selectedLanguage}, Generate a list of Strict ${
       data.subtopic
     } topics and any number of subtopics for each topic under:
 
@@ -216,10 +261,10 @@ Everything in a single line. Generate JSON format as:
   };
 
   return (
-    <div className=" mx-6 my-8 font-poppins h-full">
+    <div className=" mx-6 my-8 font-poppins h-full overflow-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="mx-4 my-6">
-        <div className="mx-6 grid gap-4 font-extralight my-8">
-          <div className="grid grid-cols-3 gap-6 items-center">
+        <div className="mx-6 grid gap-4 font-extralight my-8 ">
+          <div className="grid grid-cols-3 gap-6 items-center ">
             <SelectField
               label="Category Name"
               register={register}
@@ -290,7 +335,7 @@ Everything in a single line. Generate JSON format as:
               watchValue={watchCourseType}
             />
           </div>
-          <div className="grid grid-cols-3 gap-6 items-center">
+          <div className="grid grid-cols-3 gap-6 ">
             <SelectField
               label="Language"
               register={register}

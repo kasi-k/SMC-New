@@ -55,7 +55,7 @@ const AddTax = ({ onClose, fetchTax }) => {
         <input
           type="text"
           placeholder="select-tax"
-          className="rounded-md w-7/12 py-1.5 px-1 text-black "
+          className="rounded-md bg-white w-7/12 py-1.5 px-1 text-black "
           {...register("taxname")}
         />
         <p className="text-red-700">{errors.taxname?.message}</p>
@@ -65,7 +65,7 @@ const AddTax = ({ onClose, fetchTax }) => {
         <input
           type="text"
           placeholder="select tax"
-          className="rounded-md w-7/12 py-1.5 px-1 text-black"
+          className="rounded-md  bg-white w-7/12 py-1.5 px-1 text-black"
           {...register("percentage")}
         />
         <p className="text-red-700">{errors.percentage?.message}</p>

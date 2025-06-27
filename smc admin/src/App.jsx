@@ -22,6 +22,7 @@ import Exam from "./pages/Pre-generated courses/pregeneratecourses/Exam";
 import ViewInvoice from "./pages/subscription/ViewInvoice";
 import Quizzes from "./pages/quiz management/Quizzes/Quizzes";
 import ViewQuiz from "./pages/quiz management/Quizzes/ViewQuiz";
+import UserProfile from "./pages/users/UserProfile";
 
 const ForgotPassword = React.lazy(() => import("./pages/login/ForgotPassword"));
 const Package = React.lazy(() => import("./pages/Packages/Package"));
@@ -38,7 +39,7 @@ const Subscription = React.lazy(() =>
   import("./pages/subscription/Subscription")
 );
 const User = React.lazy(() => import("./pages/users/User"));
-const EditUser = React.lazy(() => import("./pages/users/EditUser"));
+const EditUser = React.lazy(() => import("./pages/users/UserProfile"));
 const Team = React.lazy(() => import("./pages/team/Team"));
 const EditTeam = React.lazy(() => import("./pages/team/EditTeam"));
 const AddTeam = React.lazy(() => import("./pages/team/AddTeam"));
@@ -183,7 +184,7 @@ const App = () => {
                     element={<User permissions={memoizedFeatures["users"]} />}
                   />
                   <Route path="/adduser" element={<AddUser />} />
-                  <Route path="/edituser" element={<EditUser />} />
+                  <Route path="/edituser" element={<UserProfile />} />
                 </>
               )}
               <Route path="/categorymanagement" >

@@ -76,7 +76,7 @@ const AddStatus = ({ onClose, fetchStatus }) => {
         <input
           type="text"
           placeholder="Status Name"
-          className=" text-black rounded-md lg:w-7/12 md:w-3/5 w-5/6 py-2 px-3 "
+          className=" text-black rounded-md bg-white lg:w-7/12 md:w-3/5 w-5/6 py-2 px-3 "
           {...register("status")}
         />
         <label htmlFor="">

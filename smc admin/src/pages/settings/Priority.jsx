@@ -108,7 +108,7 @@ const Priority = () => {
             type="text"
             value={editValue}
             placeholder=" Enter Category Name"
-            className="rounded-md w-4/5 py-1.5 px-1 text-black"
+            className="rounded-md w-4/5 bg-white py-1.5 px-1 text-black"
             onChange={(e) => setEditValue(e.target.value)}
           />
           <button

@@ -57,7 +57,7 @@ const AddPriority = ({ onClose, fetchPriority }) => {
             {...register("priority")}
             type="text"
             placeholder=" Enter Priority Name"
-            className="text-black rounded-md w-4/5 py-1.5 px-1 "
+            className="text-black bg-white rounded-md w-4/5 py-1.5 px-1 "
           />
           <div className="flex justify-center my-4 w-4/5">
             <button

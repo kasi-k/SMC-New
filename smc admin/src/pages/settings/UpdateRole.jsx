@@ -34,7 +34,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Packages",
-   icon: <LuLayoutDashboard size={20} />,
+   icon: <LiaRupeeSignSolid size={20} />,
       value: "packages",
       permissions: [
         { label: "Can view Packages", value: "view" },
@@ -45,7 +45,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Courses",
-       icon: <LuLayoutDashboard size={20} />,
+       icon: <TbBulb size={20} />,
       value: "courses",
       permissions: [
         { label: "Can view Courses", value: "view" },
@@ -55,13 +55,13 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Subscriptions",
-      icon: <LuLayoutDashboard size={20} />,
+      icon: <LiaRupeeSignSolid size={20} />,
       value: "subscription",
       permissions: [{ label: "Can view Subscriptions", value: "view" }],
     },
     {
       name: "Users",
-  icon: <LuLayoutDashboard size={20} />,
+  icon: <HiOutlineUserGroup size={20} />,
       value: "users",
       permissions: [
         { label: "Can View Users", value: "view" },
@@ -72,7 +72,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Team",
-      icon: <LuLayoutDashboard size={20} />,
+      icon: <HiOutlineUserGroup size={20} />,
       value: "team",
       permissions: [
         { label: "Can View Team", value: "view" },
@@ -81,20 +81,20 @@ const UpdateRole = ({ onClose }) => {
         { label: "Can Delete Team", value: "delete" },
       ],
     },
-    {
-      name: "Help & Support",
-    icon: <LuLayoutDashboard size={20} />,
-      value: "support",
-      permissions: [
-        { label: "Can view Tickets", value: "view" },
-        { label: "Can assign Tickets", value: "assign" },
-        { label: "Can reply to all tickets", value: "reply" },
-        { label: "Can reply to self tickets", value: "self" },
-      ],
-    },
+    // {
+    //   name: "Help & Support",
+    // icon: <LuLayoutDashboard size={20} />,
+    //   value: "support",
+    //   permissions: [
+    //     { label: "Can view Tickets", value: "view" },
+    //     { label: "Can assign Tickets", value: "assign" },
+    //     { label: "Can reply to all tickets", value: "reply" },
+    //     { label: "Can reply to self tickets", value: "self" },
+    //   ],
+    // },
     {
       name: "Reports",
-    icon: <LuLayoutDashboard size={20} />,
+    icon: <BiBarChartAlt size={20} />,
       value: "report",
       permissions: [
         { label: "Can view Reports", value: "view" },
@@ -103,7 +103,7 @@ const UpdateRole = ({ onClose }) => {
     },
     {
       name: "Settings",
-  icon: <LuLayoutDashboard size={20} />,
+  icon: <IoSettingsOutline size={20} />,
       value: "setting",
       permissions: [
         { label: "Roles & permission", value: "roles" },

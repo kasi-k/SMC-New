@@ -186,7 +186,7 @@ const Team = ({ permissions }) => {
   };
   return (
     <>
-      <div className="font-extralight">
+      <div className="font-poppins h-full">
         <div className="flex justify-between items-center my-2 ">
           <p className=" mx-2 mt-6">Team</p>
           <div className="flex items-center gap-3 mt-4">

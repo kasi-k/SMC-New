@@ -120,7 +120,7 @@ const AddTeam = () => {
 
   return (
     <>
-      <div className="font-extralight my-4">
+      <div className="font-extralight my-4 h-full">
         <p className=" mx-2 text-lg ">Add a new team</p>
         <hr />
         <div className="mx-12 my-6 space-y-1">
@@ -154,7 +154,7 @@ const AddTeam = () => {
                 {...register("fname")}
                 type="text"
                 placeholder="Enter First name"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3 "
+                className="outline-none text-black bg-white rounded-md py-1.5 px-3 my-3 "
               />
               <p className="text-red-700">{errors.fname?.message}</p>
             </div>
@@ -164,7 +164,7 @@ const AddTeam = () => {
                 {...register("lname")}
                 type="text"
                 placeholder="Enter Last name"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3"
+                className="outline-none bg-white text-black rounded-md py-1.5 px-3 my-3"
               />
               <p className="text-red-700">{errors.lname?.message}</p>
             </div>
@@ -174,7 +174,7 @@ const AddTeam = () => {
                 {...register("email")}
                 type="email"
                 placeholder="Enter Email"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3"
+                className="outline-none bg-white text-black rounded-md py-1.5 px-3 my-3"
               />
               <p className="text-red-700">{errors.email?.message}</p>
             </div>
@@ -185,7 +185,7 @@ const AddTeam = () => {
               <input
                 {...register("phone")}
                 type="text"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3"
+                className="outline-none bg-white text-black rounded-md py-1.5 px-3 my-3"
                 placeholder="Enter Mobile Number"
               />
               <p className="text-red-700">{errors.phone?.message}</p>
@@ -195,7 +195,7 @@ const AddTeam = () => {
               <input
                 {...register("dob")}
                 type="date"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3"
+                className="outline-none bg-white text-black rounded-md py-1.5 px-3 my-3"
               />
               <p className="text-red-700">{errors.dob?.message}</p>
             </div>
@@ -206,7 +206,7 @@ const AddTeam = () => {
               <select
                 {...register("designation")}
                 defaultValue="select"
-                className="outline-none text-black rounded-md py-1.5 px-3 my-3"
+                className="outline-none bg-white text-black rounded-md py-1.5 px-3 my-3"
               >
                 <option value="select" disabled>
                   Select Designation
