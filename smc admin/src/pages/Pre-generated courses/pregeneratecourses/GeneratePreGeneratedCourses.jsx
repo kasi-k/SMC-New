@@ -10,11 +10,10 @@ import { API } from "../../../Host";
 import { toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
 
-
 const schema = yup.object().shape({
-  category: yup.string().required("Category is required"),
-  subCategory1: yup.string().required("Sub Category 1 is required"),
-  subCategory2: yup.string().required("Sub Category 2 is required"),
+  // category: yup.string().required("Category is required"),
+  // subCategory1: yup.string().required("Sub Category 1 is required"),
+  // subCategory2: yup.string().required("Sub Category 2 is required"),
   topic: yup.string().required("Topic is required"),
   language: yup.string().required("Language is required"),
 
@@ -54,7 +53,7 @@ const InputField = ({
 );
 
 const SelectField = ({ label, register, name, options, error }) => (
-  <div className="grid gap-2  ">
+  <div className="grid gap-2">
     <label className="text-lg">
       {label} <span className="text-red-600">*</span>
     </label>
@@ -68,7 +67,7 @@ const SelectField = ({ label, register, name, options, error }) => (
           Select {label}
         </option>
         {options.map((option, index) => (
-          <option key={index} value={option.value}  >
+          <option key={index} value={option.value}>
             {option.label}
           </option>
         ))}
@@ -125,7 +124,7 @@ const RadioButtonGroup = ({
 );
 
 const GeneratePreGeneratedCourses = () => {
-const languages = [
+ const languages = [
   { value: "en", label: "English" },
   { value: "ta", label: "Tamil" },
   { value: "ml", label: "Malayalam" },
@@ -175,13 +174,24 @@ const languages = [
 ];
 
   const [processing, setProcessing] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subCategories1, setSubCategories1] = useState([]);
+  const [subCategories2, setSubCategories2] = useState([]);
+
+  const [category, setCategory] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [subcategory1, setSubCategory1] = useState("");
+  const [subcategory1Name, setSubCategory1Name] = useState("");
+  const [subcategory2, setSubCategory2] = useState("");
+  const [subcategory2Name, setSubCategory2Name] = useState("");
+
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -190,29 +200,75 @@ const languages = [
   const watchSubtopic = watch("subtopic");
   const watchCourseType = watch("coursetype");
 
-
+  // Fetch categories on load
   useEffect(() => {
-    fetchOptions();
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get(`${API}/api/getonlyCategory`);
+        setCategories(res.data.data || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
-  const fetchOptions = async () => {
-    try {
-      const response = await axios.get(`${API}/api/getcategorycourse`);
-      
-      if (Array.isArray(response.data.cate)) {
-        setOptions(response.data.cate);
-      } else {
-        console.error(
-          "Expected an array of  options, but got:",
-          response.data
-        );
-        setOptions([]);
-      }
-    } catch (error) {
-      console.error("Error fetching taxes:", error);
+  // Fetch subCategory1 when category changes
+  useEffect(() => {
+    if (category) {
+      const fetchSubCategory1 = async () => {
+        try {
+          const res = await axios.get(`${API}/api/getbasedOnCategory`, {
+            params: { category },
+          });
+          setSubCategories1(res.data.data || []);
+          setSubCategory1(""); // Reset
+          setSubCategory1Name("");
+          setSubCategory2(""); // Reset
+          setSubCategory2Name("");
+          setValue("subCategory1", "");
+          setValue("subCategory2", "");
+        } catch (error) {
+          console.error("Error fetching subCategory1:", error);
+        }
+      };
+      fetchSubCategory1();
+    } else {
+      setSubCategories1([]);
+      setSubCategory1("");
+      setSubCategory1Name("");
+      setSubCategory2("");
+      setSubCategory2Name("");
+      setValue("subCategory1", "");
+      setValue("subCategory2", "");
     }
-  };
+  }, [category]);
 
+  // Fetch subCategory2 when subCategory1 changes
+  useEffect(() => {
+    if (subcategory1) {
+      const fetchSubCategory2 = async () => {
+        try {
+          const res = await axios.get(`${API}/api/getbasedOnSubategory1`, {
+            params: { subCategory1: subcategory1 },
+          });
+          setSubCategories2(res.data.data || []);
+          setSubCategory2("");
+          setSubCategory2Name("");
+          setValue("subCategory2", "");
+        } catch (error) {
+          console.error("Error fetching subCategory2:", error);
+        }
+      };
+      fetchSubCategory2();
+    } else {
+      setSubCategories2([]);
+      setSubCategory2("");
+      setSubCategory2Name("");
+      setValue("subCategory2", "");
+    }
+  }, [subcategory1]);
 
   const onSubmit = async (data) => {
     setProcessing(true);
@@ -240,17 +296,15 @@ Everything in a single line. Generate JSON format as:
       const cleaned = res.data.generatedText.replace(/```json|```/g, "");
       const json = JSON.parse(cleaned);
 
-     
-
       navigate("/listpregeneratecourses", {
         state: {
           jsonData: json,
           mainTopic: topic.toLowerCase(),
           type: data.coursetype,
           lang: data.language,
-          category,
-          subCategory1,
-          subCategory2,
+          category:categoryName,
+          subCategory1:subcategory1Name,
+          subCategory2:subcategory2Name,
         },
       });
     } catch (err) {
@@ -263,38 +317,103 @@ Everything in a single line. Generate JSON format as:
   return (
     <div className=" mx-6 my-8 font-poppins h-full overflow-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="mx-4 my-6">
-        <div className="mx-6 grid gap-4 font-extralight my-8 ">
-          <div className="grid grid-cols-3 gap-6 items-center ">
-            <SelectField
-              label="Category Name"
-              register={register}
-              name="category"
-              options={options.map((category) => ({
-                value: category.category,
-                label: category.category,
-              }))}
-              error={errors.category?.message}
-            />
-            <SelectField
-              label="Sub Category 1"
-              register={register}
-              name="subCategory1"
-                options={options.map((category) => ({
-                value: category.subCategory1,
-                label: category.subCategory1,
-              }))}
-              error={errors.subCategory1?.message}
-            />
-            <SelectField
-              label="Sub Category 2"
-              register={register}
-              name="subCategory2"
-              options={options.map((category) => ({
-                value: category.subCategory2,
-                label: category.subCategory2,
-              }))}
-              error={errors.subCategory2?.message}
-            />
+        <div className="mx-6 grid gap-4 font-extralight my-8">
+          <div className="grid grid-cols-3 gap-6 items-center">
+            <select
+              value={category}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedCat = categories.find(
+                  (cat) => cat._id === selectedId
+                );
+
+                if (selectedCat) {
+                  setCategory(selectedId);
+                  setCategoryName(selectedCat.name);
+                } else {
+                  setCategory("");
+                  setCategoryName("");
+                }
+
+                // Reset child selects
+                setSubCategory1("");
+                setSubCategory1Name("");
+                setSubCategory2("");
+                setSubCategory2Name("");
+
+                setCurrentPage(1);
+              }}
+              className="w-full bg-white outline-none text-black rounded-md py-2 px-2"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={subcategory1}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedSC1 = subCategories1.find(
+                  (sc1) => sc1._id === selectedId
+                );
+
+                if (selectedSC1) {
+                  setSubCategory1(selectedId);
+                  setSubCategory1Name(selectedSC1.name);
+                } else {
+                  setSubCategory1("");
+                  setSubCategory1Name("");
+                }
+
+                // Reset subCategory2
+                setSubCategory2("");
+                setSubCategory2Name("");
+
+                setCurrentPage(1);
+              }}
+              className="w-full bg-white outline-none text-black rounded-md py-2 px-2"
+              disabled={!category}
+            >
+              <option value="">All SubCategory1</option>
+              {subCategories1.map((sc1) => (
+                <option key={sc1._id} value={sc1._id}>
+                  {sc1.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={subcategory2}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedSC2 = subCategories2.find(
+                  (sc2) => sc2._id === selectedId
+                );
+
+                if (selectedSC2) {
+                  setSubCategory2(selectedId);
+                  setSubCategory2Name(selectedSC2.name);
+                } else {
+                  setSubCategory2("");
+                  setSubCategory2Name("");
+                }
+
+                setCurrentPage(1);
+              }}
+              className="w-full bg-white outline-none text-black rounded-md py-2 px-2"
+              disabled={!subcategory1}
+            >
+              <option value="">All SubCategory2</option>
+              {subCategories2.map((sc2) => (
+                <option key={sc2._id} value={sc2._id}>
+                  {sc2.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <InputField
